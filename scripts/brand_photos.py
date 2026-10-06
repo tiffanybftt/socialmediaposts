@@ -6,7 +6,8 @@ Edit BRAND and SLIDES below; everything else is layout code.
 """
 from pathlib import Path
 
-from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFont
+import numpy as np
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -25,16 +26,18 @@ BRAND = {
 }
 
 SIZE = 1080       # square post
-WARM = (255, 218, 178)   # multiplied over the photo to push highlights/skin warm
-SHADOW = (38, 16, 6)     # warm near-black the photo is blended toward
-TINT = 0.28              # how far toward SHADOW (0 = none, 1 = solid)
-CONTRAST = 1.12
-FADE = 0.45              # darkening at the bottom edge, fading into the band
-FADE_H = 0.40            # fraction of the photo height the fade covers
-EMBER = 0.28             # orange glow strength along the bottom of the photo
+# Photo polish (applied at full resolution, before downscaling)
+MIDTONES = 0.86          # gamma < 1 brightens midtones (faces); 1 = off
+SHADOW_LIFT = 0.20       # brightens shadows (dark shirts, tables); 0 = off
+HIGHLIGHT_EASE = 0.10    # pulls blown highlights (windows) back; 0 = off
+WARMTH = (1.04, 1.00, 0.94)   # per-channel gain (R, G, B): subtle warm cast
+SATURATION = 1.08
+CLARITY = 22             # local-contrast percent (large-radius unsharp); 0 = off
+SHARPEN = 70             # final detail sharpening percent, applied after downscale
+JPEG_QUALITY = 95
 RULE_H = 6               # orange rule between photo and band
 BAND_H = 190             # height of the branded band
-PAD = 48          # side padding
+PAD = 48                 # side padding
 
 # focus = (x, y) in the ORIGINAL photo that the crop should be centered on.
 SLIDES = [
@@ -55,25 +58,35 @@ SLIDES = [
 ]
 
 
-def cover_crop(img, w, h, focus):
-    """Scale-free crop of the largest w:h box that fits, centered on focus, then resize."""
+def crop_box(img, w, h, focus):
+    """Largest w:h box that fits in img, centered on focus (clamped to the edges)."""
     iw, ih = img.size
     target = w / h
     cw, ch = (iw, int(iw / target)) if iw / ih < target else (int(ih * target), ih)
     left = min(max(int(focus[0] - cw / 2), 0), iw - cw)
     top = min(max(int(focus[1] - ch / 2), 0), ih - ch)
-    return img.crop((left, top, left + cw, top + ch)).resize((w, h), Image.LANCZOS)
+    return (left, top, left + cw, top + ch)
 
 
-def grade(img, band, accent):
-    """Dark, warm grade: warm cast + shadow tint + orange ember at the base, fading into the band."""
-    img = ImageEnhance.Contrast(ImageChops.multiply(img, Image.new("RGB", img.size, WARM))).enhance(CONTRAST)
-    img = Image.blend(img, Image.new("RGB", img.size, SHADOW), TINT)
-    fade_h = int(img.height * FADE_H)
-    ramp = Image.linear_gradient("L").resize((img.width, fade_h))
-    img.paste(Image.new("RGB", (img.width, fade_h), accent), (0, img.height - fade_h), ramp.point(lambda v: int(v * EMBER)))
-    img.paste(Image.new("RGB", (img.width, fade_h), band), (0, img.height - fade_h), ramp.point(lambda v: int(v * FADE)))
+def polish(img):
+    """Fix backlit/dim phone photos: levels, shadow lift, highlight ease, warmth, clarity."""
+    img = ImageOps.autocontrast(img, cutoff=0.3)
+    x = np.asarray(img, dtype=np.float32) / 255.0
+    x = x ** MIDTONES
+    x = x + SHADOW_LIFT * (1 - x) ** 2          # strongest in the darks, none at white
+    x = x - HIGHLIGHT_EASE * x ** 4             # only touches the brightest areas
+    x = x * np.array(WARMTH, dtype=np.float32)
+    img = Image.fromarray((np.clip(x, 0, 1) * 255).astype(np.uint8))
+    img = ImageEnhance.Color(img).enhance(SATURATION)
+    if CLARITY:
+        img = img.filter(ImageFilter.UnsharpMask(radius=img.width / 40, percent=CLARITY, threshold=0))
     return img
+
+
+def fit_photo(img, w, h, focus):
+    """Crop, polish at full resolution, downscale, then sharpen for the smaller size."""
+    img = polish(img.crop(crop_box(img, w, h, focus))).resize((w, h), Image.LANCZOS)
+    return img.filter(ImageFilter.UnsharpMask(radius=1.0, percent=SHARPEN, threshold=2))
 
 
 def tinted_logo(path, height, color):
@@ -108,7 +121,7 @@ def render(slide):
     b = BRAND
     canvas = Image.new("RGB", (SIZE, SIZE), b["band"])
     photo = Image.open(slide["photo"]).convert("RGB")
-    canvas.paste(grade(cover_crop(photo, SIZE, SIZE - BAND_H, slide["focus"]), b["band"], b["accent"]), (0, 0))
+    canvas.paste(fit_photo(photo, SIZE, SIZE - BAND_H, slide["focus"]), (0, 0))
 
     # Logo, vertically centered in the band
     logo_h = BAND_H - 60
@@ -137,8 +150,10 @@ def render(slide):
 def main():
     for slide in SLIDES:
         slide["out"].parent.mkdir(parents=True, exist_ok=True)
-        render(slide).save(slide["out"], optimize=True)
-        print("wrote", slide["out"].relative_to(ROOT))
+        post = render(slide)
+        post.save(slide["out"], optimize=True)
+        post.save(slide["out"].with_suffix(".jpg"), quality=JPEG_QUALITY, subsampling=0, optimize=True)
+        print("wrote", slide["out"].relative_to(ROOT), "(+ .jpg)")
 
 
 if __name__ == "__main__":
