@@ -40,7 +40,8 @@ CLARITY = 22             # local-contrast percent (large-radius unsharp); 0 = of
 SHARPEN = 70             # final detail sharpening percent, applied after downscale
 JPEG_QUALITY = 95
 RULE_H = 6               # orange rule between photo and band
-BAND_H = 190             # height of the branded band
+BAND_H = 190             # height of the branded footer band
+HEADER_H = 98            # height of the header bar (people); 0 for no header
 PAD = 48                 # side padding
 
 # Retouch regions for the selfie, in pixels of the ORIGINAL photo (see scripts/retouch.py).
@@ -78,9 +79,9 @@ SELFIE_RETOUCH = {
 SLIDES = [
     {
         "photo": ROOT / "photos" / "lunch-selfie-01.jpg",
-        "focus": (875, 915),     # centers Jacob and Julia
+        "focus": (875, 932),     # centers Jacob and Julia
         "zoom": 1.2,             # crop in 20%: trims the empty keg/window space on the left
-        "tags": [                # (name, role, corner) name tags; empty list to omit
+        "header": [              # (name, role, side): who is in the photo
             ("JACOB STULTZ", "OWNER, STULTZ PLUMBING", "left"),
             ("JULIA ADAMS", "OPERATIONS COACH", "right"),
         ],
@@ -152,27 +153,25 @@ def fit_font(path, text, max_w, start, draw):
     return ImageFont.truetype(path, 20)
 
 
-def draw_tag(canvas, name, role, side, brand, margin=34):
-    """Stacked name tag in a top corner: name on an accent block, role on a dark block below."""
-    f_name = ImageFont.truetype(brand["font_head"], 25)
+def draw_header(canvas, people, brand):
+    """Header bar across the top: each person's name over their role, ending in the accent rule.
+
+    people: [(name, role, side), ...] where side is "left" or "right" (match where they stand).
+    """
+    draw = ImageDraw.Draw(canvas)
+    draw.rectangle((0, 0, SIZE, HEADER_H), fill=brand["band"])
+    draw.rectangle((0, HEADER_H - RULE_H, SIZE, HEADER_H - 1), fill=brand["accent"])
+    f_name = ImageFont.truetype(brand["font_head"], 30)
     f_role = ImageFont.truetype(brand["font_label"], 17)
-    probe = ImageDraw.Draw(canvas)
-    width = lambda t, f, tr: sum(probe.textlength(c, font=f) + tr for c in t) - tr
-    pad, h1, h2 = 20, 40, 32
-    w = int(max(width(name, f_name, 2.5), width(role, f_role, 2.2))) + pad * 2
-    x0 = margin if side == "left" else SIZE - margin - w
-    y0 = margin
-    shadow = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-    ImageDraw.Draw(shadow).rounded_rectangle((x0, y0 + 5, x0 + w, y0 + h1 + h2 + 5), 6, fill=(0, 0, 0, 120))
-    base = Image.alpha_composite(canvas.convert("RGBA"), shadow.filter(ImageFilter.GaussianBlur(7)))
-    panel = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-    pd = ImageDraw.Draw(panel)
-    pd.rounded_rectangle((x0, y0, x0 + w, y0 + h1), 6, fill=brand["accent"] + (255,), corners=(True, True, False, False))
-    pd.rounded_rectangle((x0, y0 + h1, x0 + w, y0 + h1 + h2), 6, fill=brand["band"] + (235,), corners=(False, False, True, True))
-    canvas.paste(Image.alpha_composite(base, panel).convert("RGB"))
-    d = ImageDraw.Draw(canvas)
-    draw_tracked(d, (x0 + pad, y0 + (h1 - f_name.size) // 2 - 3), name, f_name, brand["band"], 2.5)
-    draw_tracked(d, (x0 + pad, y0 + h1 + (h2 - f_role.size) // 2 - 2), role, f_role, brand["text"], 2.2)
+    track = 2.6
+    width = lambda t, f, tr: sum(draw.textlength(c, font=f) + tr for c in t) - tr
+    gap = 8
+    top = (HEADER_H - RULE_H - (f_name.size + gap + f_role.size)) // 2 - 2
+    for name, role, side in people:
+        w = max(width(name, f_name, 1.5), width(role, f_role, track))
+        x = PAD if side == "left" else SIZE - PAD - w
+        draw_tracked(draw, (x, top), name, f_name, brand["text"], 1.5)
+        draw_tracked(draw, (x, top + f_name.size + gap), role, f_role, brand["accent"], track)
 
 
 def render(slide):
@@ -181,9 +180,10 @@ def render(slide):
     photo = Image.open(slide["photo"]).convert("RGB")
     if slide.get("retouch"):
         photo = retouch(photo, slide["retouch"])
-    canvas.paste(fit_photo(photo, SIZE, SIZE - BAND_H, slide["focus"], slide.get("zoom", 1.0)), (0, 0))
-    for name, role, side in slide.get("tags", []):
-        draw_tag(canvas, name, role, side, b)
+    photo_h = SIZE - BAND_H - HEADER_H
+    canvas.paste(fit_photo(photo, SIZE, photo_h, slide["focus"], slide.get("zoom", 1.0)), (0, HEADER_H))
+    if HEADER_H and slide.get("header"):
+        draw_header(canvas, slide["header"], b)
 
     # Logo, vertically centered in the band
     logo_h = BAND_H - 60
