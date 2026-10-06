@@ -60,7 +60,9 @@ SELFIE_RETOUCH = {
             "face": (1180, 1100, 172, 238),
             "avoid": [(1065, 1030, 82, 44), (1240, 1030, 82, 44), (1142, 1213, 95, 34)],
             "teeth": (1142, 1214, 58, 18),
-            "tooth_L": (40, 52),
+            "tooth_L": (34, 48),
+            "teeth_yellow": 0.55,
+            "teeth_lift": 4.0,
             "eyes": [(1065, 1048), (1240, 1048)],
             "lum_limit": None,
         },
@@ -76,7 +78,9 @@ SELFIE_RETOUCH = {
 SLIDES = [
     {
         "photo": ROOT / "photos" / "lunch-selfie-01.jpg",
-        "focus": (750, 1000),
+        "focus": (875, 915),     # centers Jacob and Julia
+        "zoom": 1.2,             # crop in 20%: trims the empty keg/window space on the left
+        "tag": "LEADERSHIP LUNCH",   # corner tag (None to omit)
         "retouch": SELFIE_RETOUCH,
         "headline": "BUILDING RELATIONSHIPS",
         "subline": "Good food. Real conversations. Better businesses.",
@@ -85,11 +89,12 @@ SLIDES = [
 ]
 
 
-def crop_box(img, w, h, focus):
-    """Largest w:h box that fits in img, centered on focus (clamped to the edges)."""
+def crop_box(img, w, h, focus, zoom=1.0):
+    """Largest w:h box that fits in img (shrunk by zoom), centered on focus, clamped to the edges."""
     iw, ih = img.size
     target = w / h
     cw, ch = (iw, int(iw / target)) if iw / ih < target else (int(ih * target), ih)
+    cw, ch = int(cw / zoom), int(ch / zoom)
     left = min(max(int(focus[0] - cw / 2), 0), iw - cw)
     top = min(max(int(focus[1] - ch / 2), 0), ih - ch)
     return (left, top, left + cw, top + ch)
@@ -110,9 +115,9 @@ def polish(img):
     return img
 
 
-def fit_photo(img, w, h, focus):
+def fit_photo(img, w, h, focus, zoom=1.0):
     """Crop, polish at full resolution, downscale, then sharpen for the smaller size."""
-    img = polish(img.crop(crop_box(img, w, h, focus))).resize((w, h), Image.LANCZOS)
+    img = polish(img.crop(crop_box(img, w, h, focus, zoom))).resize((w, h), Image.LANCZOS)
     return img.filter(ImageFilter.UnsharpMask(radius=1.0, percent=SHARPEN, threshold=2))
 
 
@@ -144,13 +149,31 @@ def fit_font(path, text, max_w, start, draw):
     return ImageFont.truetype(path, 20)
 
 
+def draw_tag(canvas, text, fill, ink, font_path, margin=40):
+    """Orange corner tag with a soft shadow, top-left (the 'category label' marketers use)."""
+    font = ImageFont.truetype(font_path, 27)
+    probe = ImageDraw.Draw(canvas)
+    tracking = 3
+    tw = sum(probe.textlength(ch, font=font) + tracking for ch in text) - tracking
+    pad_x, pad_y = 22, 14
+    box = (margin, margin, margin + int(tw) + pad_x * 2, margin + font.size + pad_y * 2 - 4)
+    shadow = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    ImageDraw.Draw(shadow).rounded_rectangle((box[0], box[1] + 5, box[2], box[3] + 5), 6, fill=(0, 0, 0, 120))
+    canvas.paste(Image.alpha_composite(canvas.convert("RGBA"), shadow.filter(ImageFilter.GaussianBlur(7))).convert("RGB"))
+    d = ImageDraw.Draw(canvas)
+    d.rounded_rectangle(box, 6, fill=fill)
+    draw_tracked(d, (box[0] + pad_x, box[1] + pad_y - 3), text, font, ink, tracking)
+
+
 def render(slide):
     b = BRAND
     canvas = Image.new("RGB", (SIZE, SIZE), b["band"])
     photo = Image.open(slide["photo"]).convert("RGB")
     if slide.get("retouch"):
         photo = retouch(photo, slide["retouch"])
-    canvas.paste(fit_photo(photo, SIZE, SIZE - BAND_H, slide["focus"]), (0, 0))
+    canvas.paste(fit_photo(photo, SIZE, SIZE - BAND_H, slide["focus"], slide.get("zoom", 1.0)), (0, 0))
+    if slide.get("tag"):
+        draw_tag(canvas, slide["tag"], b["accent"], b["band"], b["font_head"])
 
     # Logo, vertically centered in the band
     logo_h = BAND_H - 60

@@ -11,6 +11,7 @@ Coordinates in a spec are pixels of the ORIGINAL photo.
             "teeth": (cx, cy, rx, ry),        # search area for teeth (whitening is color-gated)
             "tooth_L": (lo, hi),              # optional: lightness gate (shadowed teeth need lower)
             "teeth_lift": 7.0,                # optional: lightness added to teeth
+            "teeth_yellow": 0.4,              # optional: fraction of yellow removed
             "eyes":  [(cx, cy), ...],         # eye centers
             "lum_limit": y or None,           # smooth skin luminance only above this y (spares beards)
         }],
@@ -103,7 +104,8 @@ def retouch(img, spec, debug=None):
         zone = _ellipse(shape, f["teeth"], 3)
         tooth = zone * _smooth(b - a, -3, 3) * _smooth(L, lo, hi)
         tooth = cv2.GaussianBlur(tooth, (0, 0), 1.0)
-        b -= TEETH_YELLOW * tooth * np.clip(b - 5, 0, None)
+        b -= f.get("teeth_yellow", TEETH_YELLOW) * tooth * np.clip(b - 5, 0, None)
+        a -= 0.25 * tooth * np.clip(a - 3, 0, None)   # less brown/orange cast
         L += f.get("teeth_lift", TEETH_LIFT) * tooth
         L = np.minimum(L, np.maximum(L - 0.0, 0) * (1 - tooth) + 82 * tooth)  # never blow teeth out to flat white
         dbg.setdefault("teeth", []).append(tooth)
