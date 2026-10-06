@@ -33,15 +33,16 @@ SIZE = 1080       # square post
 # Photo polish (applied at full resolution, before downscaling)
 MIDTONES = 0.86          # gamma < 1 brightens midtones (faces); 1 = off
 SHADOW_LIFT = 0.20       # brightens shadows (dark shirts, tables); 0 = off
-HIGHLIGHT_EASE = 0.10    # pulls blown highlights (windows) back; 0 = off
-WARMTH = (1.04, 1.00, 0.94)   # per-channel gain (R, G, B): subtle warm cast
+HIGHLIGHT_EASE = 0.14    # pulls blown highlights (windows) back; 0 = off
+WARMTH = (1.02, 1.00, 0.97)   # per-channel gain (R, G, B): subtle warm cast
 SATURATION = 1.08
+CONTRAST = 1.09           # restores punch after the shadow lift
 CLARITY = 22             # local-contrast percent (large-radius unsharp); 0 = off
 SHARPEN = 70             # final detail sharpening percent, applied after downscale
 JPEG_QUALITY = 95
 RULE_H = 6               # orange rule between photo and band
-BAND_H = 190             # height of the branded footer band
-HEADER_H = 98            # height of the header bar (people); 0 for no header
+BAND_H = 160             # height of the branded footer band
+HEADER_H = 112            # height of the header bar (people); 0 for no header
 PAD = 48                 # side padding
 
 # Retouch regions for the selfie, in pixels of the ORIGINAL photo (see scripts/retouch.py).
@@ -79,7 +80,7 @@ SELFIE_RETOUCH = {
 SLIDES = [
     {
         "photo": ROOT / "photos" / "lunch-selfie-01.jpg",
-        "focus": (875, 932),     # centers Jacob and Julia
+        "focus": (875, 938),     # centers Jacob and Julia
         "zoom": 1.2,             # crop in 20%: trims the empty keg/window space on the left
         "header": [              # (name, role, side): who is in the photo
             ("JACOB STULTZ", "OWNER, STULTZ PLUMBING", "left"),
@@ -87,7 +88,7 @@ SLIDES = [
         ],
         "retouch": SELFIE_RETOUCH,
         "headline": "LEADERSHIP LUNCH",
-        "subline": "Good food. Real conversations. Better businesses.",
+        "subline": None,         # optional tagline under the headline
         "out": ROOT / "output" / "leadership-lunch.png",
     },
 ]
@@ -114,6 +115,7 @@ def polish(img):
     x = x * np.array(WARMTH, dtype=np.float32)
     img = Image.fromarray((np.clip(x, 0, 1) * 255).astype(np.uint8))
     img = ImageEnhance.Color(img).enhance(SATURATION)
+    img = ImageEnhance.Contrast(img).enhance(CONTRAST)
     if CLARITY:
         img = img.filter(ImageFilter.UnsharpMask(radius=img.width / 40, percent=CLARITY, threshold=0))
     return img
@@ -161,9 +163,9 @@ def draw_header(canvas, people, brand):
     draw = ImageDraw.Draw(canvas)
     draw.rectangle((0, 0, SIZE, HEADER_H), fill=brand["band"])
     draw.rectangle((0, HEADER_H - RULE_H, SIZE, HEADER_H - 1), fill=brand["accent"])
-    f_name = ImageFont.truetype(brand["font_head"], 30)
-    f_role = ImageFont.truetype(brand["font_label"], 17)
-    track = 2.6
+    f_name = ImageFont.truetype(brand["font_head"], 34)
+    f_role = ImageFont.truetype(brand["font_label"], 22)
+    track = 2.4
     width = lambda t, f, tr: sum(draw.textlength(c, font=f) + tr for c in t) - tr
     gap = 8
     top = (HEADER_H - RULE_H - (f_name.size + gap + f_role.size)) // 2 - 2
@@ -196,16 +198,17 @@ def render(slide):
     draw = ImageDraw.Draw(canvas)
     tx = PAD + logo.width + 36
     max_w = SIZE - PAD - tx
-    label = ImageFont.truetype(b["font_label"], 21)
-    head = fit_font(b["font_head"], slide["headline"], max_w, 62, draw)
-    sub = fit_font(b["font_body"], slide["subline"], max_w, 27, draw)
+    label = ImageFont.truetype(b["font_label"], 22)
+    head = fit_font(b["font_head"], slide["headline"], max_w, 74, draw)
+    sub = fit_font(b["font_body"], slide["subline"], max_w, 27, draw) if slide.get("subline") else None
 
-    lh, hh, sh = 21, head.size, sub.size
-    gap1, gap2 = 14, 12
-    y = band_top + (BAND_H - (lh + gap1 + hh + gap2 + sh)) // 2
+    lh, hh, gap1, gap2 = 22, head.size, 12, 12
+    total = lh + gap1 + hh + ((gap2 + sub.size) if sub else 0)
+    y = band_top + RULE_H // 2 + (BAND_H - RULE_H - total) // 2
     draw_tracked(draw, (tx, y), b["name"], label, b["accent"], 4)
     draw.text((tx, y + lh + gap1 - 6), slide["headline"], font=head, fill=b["text"])
-    draw.text((tx, y + lh + gap1 + hh + gap2 - 4), slide["subline"], font=sub, fill=b["muted"])
+    if sub:
+        draw.text((tx, y + lh + gap1 + hh + gap2 - 4), slide["subline"], font=sub, fill=b["muted"])
     return canvas
 
 
