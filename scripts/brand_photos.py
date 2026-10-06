@@ -6,27 +6,34 @@ Edit BRAND and SLIDES below; everything else is layout code.
 """
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# --- Brand settings (PLACEHOLDERS: black/white taken from the logo; swap in the real palette/fonts) ---
+# --- Brand settings: black, white, industrial grey, orange. The exact hex values and fonts are
+# PLACEHOLDERS until the official brand guide is dropped in. ---
 BRAND = {
     "name": "BUILT FOR THE TRADES",
     "logo": ROOT / "brand" / "logo-original.webp",  # black art on transparent background
-    "band": (17, 17, 17),         # band background
-    "text": (255, 255, 255),      # headline + logo
-    "muted": (190, 190, 190),     # subline
+    "band": (14, 14, 14),         # band background (black)
+    "text": (255, 255, 255),      # headline + logo (white)
+    "muted": (168, 170, 172),     # subline (industrial grey)
+    "accent": (242, 105, 33),     # orange: label text + rule above the band
     "font_head": "/usr/share/fonts/opentype/inter/Inter-Black.otf",
     "font_body": "/usr/share/fonts/opentype/inter/Inter-Medium.otf",
     "font_label": "/usr/share/fonts/opentype/inter/Inter-Bold.otf",
 }
 
 SIZE = 1080       # square post
-TINT = 0.32       # uniform darkening of the photo (0 = none, 1 = black)
-FADE = 0.45       # extra darkening at the bottom edge, fading in to the band
-FADE_H = 0.45     # how much of the photo height the fade covers
-BAND_H = 190      # height of the branded band
+WARM = (255, 218, 178)   # multiplied over the photo to push highlights/skin warm
+SHADOW = (38, 16, 6)     # warm near-black the photo is blended toward
+TINT = 0.28              # how far toward SHADOW (0 = none, 1 = solid)
+CONTRAST = 1.12
+FADE = 0.45              # darkening at the bottom edge, fading into the band
+FADE_H = 0.40            # fraction of the photo height the fade covers
+EMBER = 0.28             # orange glow strength along the bottom of the photo
+RULE_H = 6               # orange rule between photo and band
+BAND_H = 190             # height of the branded band
 PAD = 48          # side padding
 
 # focus = (x, y) in the ORIGINAL photo that the crop should be centered on.
@@ -58,12 +65,14 @@ def cover_crop(img, w, h, focus):
     return img.crop((left, top, left + cw, top + ch)).resize((w, h), Image.LANCZOS)
 
 
-def darken(img, color):
-    """Tint the whole photo, then fade its bottom edge into the band color."""
-    img = Image.blend(img, Image.new("RGB", img.size, color), TINT)
+def grade(img, band, accent):
+    """Dark, warm grade: warm cast + shadow tint + orange ember at the base, fading into the band."""
+    img = ImageEnhance.Contrast(ImageChops.multiply(img, Image.new("RGB", img.size, WARM))).enhance(CONTRAST)
+    img = Image.blend(img, Image.new("RGB", img.size, SHADOW), TINT)
     fade_h = int(img.height * FADE_H)
-    ramp = Image.linear_gradient("L").resize((img.width, fade_h)).point(lambda v: int(v * FADE))
-    img.paste(Image.new("RGB", (img.width, fade_h), color), (0, img.height - fade_h), ramp)
+    ramp = Image.linear_gradient("L").resize((img.width, fade_h))
+    img.paste(Image.new("RGB", (img.width, fade_h), accent), (0, img.height - fade_h), ramp.point(lambda v: int(v * EMBER)))
+    img.paste(Image.new("RGB", (img.width, fade_h), band), (0, img.height - fade_h), ramp.point(lambda v: int(v * FADE)))
     return img
 
 
@@ -99,12 +108,13 @@ def render(slide):
     b = BRAND
     canvas = Image.new("RGB", (SIZE, SIZE), b["band"])
     photo = Image.open(slide["photo"]).convert("RGB")
-    canvas.paste(darken(cover_crop(photo, SIZE, SIZE - BAND_H, slide["focus"]), b["band"]), (0, 0))
+    canvas.paste(grade(cover_crop(photo, SIZE, SIZE - BAND_H, slide["focus"]), b["band"], b["accent"]), (0, 0))
 
     # Logo, vertically centered in the band
     logo_h = BAND_H - 60
     logo = tinted_logo(b["logo"], logo_h, b["text"])
     band_top = SIZE - BAND_H
+    ImageDraw.Draw(canvas).rectangle((0, band_top, SIZE, band_top + RULE_H - 1), fill=b["accent"])
     canvas.paste(logo, (PAD, band_top + (BAND_H - logo_h) // 2), logo)
 
     # Text block to the right of the logo
@@ -118,7 +128,7 @@ def render(slide):
     lh, hh, sh = 21, head.size, sub.size
     gap1, gap2 = 14, 12
     y = band_top + (BAND_H - (lh + gap1 + hh + gap2 + sh)) // 2
-    draw_tracked(draw, (tx, y), b["name"], label, b["muted"], 4)
+    draw_tracked(draw, (tx, y), b["name"], label, b["accent"], 4)
     draw.text((tx, y + lh + gap1 - 6), slide["headline"], font=head, fill=b["text"])
     draw.text((tx, y + lh + gap1 + hh + gap2 - 4), slide["subline"], font=sub, fill=b["muted"])
     return canvas
