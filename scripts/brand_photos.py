@@ -4,10 +4,14 @@
 Usage:  python3 scripts/brand_photos.py            # renders every slide in SLIDES
 Edit BRAND and SLIDES below; everything else is layout code.
 """
+import sys
 from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from retouch import retouch  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -39,11 +43,41 @@ RULE_H = 6               # orange rule between photo and band
 BAND_H = 190             # height of the branded band
 PAD = 48                 # side padding
 
+# Retouch regions for the selfie, in pixels of the ORIGINAL photo (see scripts/retouch.py).
+# Faces: Jacob first, then Julia.
+SELFIE_RETOUCH = {
+    "faces": [
+        {   # Jacob
+            "face": (765, 795, 122, 100),
+            "avoid": [(730, 732, 78, 34), (845, 742, 72, 34), (770, 882, 80, 26)],
+            "teeth": (770, 883, 46, 11),
+            "tooth_L": (24, 34),
+            "teeth_lift": 5.0,
+            "eyes": [(722, 737), (840, 748)],
+            "lum_limit": 870,
+        },
+        {   # Julia
+            "face": (1180, 1100, 172, 238),
+            "avoid": [(1065, 1030, 82, 44), (1240, 1030, 82, 44), (1142, 1213, 95, 34)],
+            "teeth": (1142, 1214, 58, 18),
+            "tooth_L": (40, 52),
+            "eyes": [(1065, 1048), (1240, 1048)],
+            "lum_limit": None,
+        },
+    ],
+    "hair": [
+        [(905, 1500), (915, 1000), (960, 880), (1010, 862), (1008, 1000), (1000, 1150), (985, 1300), (980, 1500)],
+        [(1350, 870), (1400, 900), (1450, 1000), (1500, 1100), (1500, 1500), (1380, 1450), (1350, 1300), (1355, 1100)],
+        [(1010, 870), (1030, 830), (1100, 805), (1250, 800), (1330, 830), (1360, 880), (1300, 885), (1180, 865), (1070, 880)],
+    ],
+}
+
 # focus = (x, y) in the ORIGINAL photo that the crop should be centered on.
 SLIDES = [
     {
         "photo": ROOT / "photos" / "lunch-selfie-01.jpg",
         "focus": (750, 1000),
+        "retouch": SELFIE_RETOUCH,
         "headline": "BUILDING RELATIONSHIPS",
         "subline": "Good food. Real conversations. Better businesses.",
         "out": ROOT / "output" / "leadership-lunch.png",
@@ -114,6 +148,8 @@ def render(slide):
     b = BRAND
     canvas = Image.new("RGB", (SIZE, SIZE), b["band"])
     photo = Image.open(slide["photo"]).convert("RGB")
+    if slide.get("retouch"):
+        photo = retouch(photo, slide["retouch"])
     canvas.paste(fit_photo(photo, SIZE, SIZE - BAND_H, slide["focus"]), (0, 0))
 
     # Logo, vertically centered in the band
