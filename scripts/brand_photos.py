@@ -80,9 +80,9 @@ SLIDES = [
         "photo": ROOT / "photos" / "lunch-selfie-01.jpg",
         "focus": (875, 915),     # centers Jacob and Julia
         "zoom": 1.2,             # crop in 20%: trims the empty keg/window space on the left
-        "tag": "LEADERSHIP LUNCH",   # corner tag (None to omit)
+        "tag": ("JACOB STULTZ", "OWNER, STULTZ PLUMBING"),   # (name, role) corner tag; None to omit
         "retouch": SELFIE_RETOUCH,
-        "headline": "BUILDING RELATIONSHIPS",
+        "headline": "LEADERSHIP LUNCH",
         "subline": "Good food. Real conversations. Better businesses.",
         "out": ROOT / "output" / "leadership-lunch.png",
     },
@@ -149,20 +149,29 @@ def fit_font(path, text, max_w, start, draw):
     return ImageFont.truetype(path, 20)
 
 
-def draw_tag(canvas, text, fill, ink, font_path, margin=40):
-    """Orange corner tag with a soft shadow, top-left (the 'category label' marketers use)."""
-    font = ImageFont.truetype(font_path, 27)
+def draw_tag(canvas, tag, brand, margin=40, h=48):
+    """Two-part name tag, top-left: name on an accent block, role on a dark block."""
+    name, role = tag
+    f_name = ImageFont.truetype(brand["font_head"], 24)
+    f_role = ImageFont.truetype(brand["font_label"], 20)
     probe = ImageDraw.Draw(canvas)
-    tracking = 3
-    tw = sum(probe.textlength(ch, font=font) + tracking for ch in text) - tracking
-    pad_x, pad_y = 22, 14
-    box = (margin, margin, margin + int(tw) + pad_x * 2, margin + font.size + pad_y * 2 - 4)
+    track = 2.5
+    width = lambda t, f: sum(probe.textlength(c, font=f) + track for c in t) - track
+    pad = 20
+    w1, w2 = int(width(name, f_name)) + pad * 2, int(width(role, f_role)) + pad * 2
+    x0, y0 = margin, margin
     shadow = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-    ImageDraw.Draw(shadow).rounded_rectangle((box[0], box[1] + 5, box[2], box[3] + 5), 6, fill=(0, 0, 0, 120))
-    canvas.paste(Image.alpha_composite(canvas.convert("RGBA"), shadow.filter(ImageFilter.GaussianBlur(7))).convert("RGB"))
+    ImageDraw.Draw(shadow).rounded_rectangle((x0, y0 + 5, x0 + w1 + w2, y0 + h + 5), 6, fill=(0, 0, 0, 120))
+    base = Image.alpha_composite(canvas.convert("RGBA"), shadow.filter(ImageFilter.GaussianBlur(7)))
+    panel = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    pd = ImageDraw.Draw(panel)
+    pd.rounded_rectangle((x0, y0, x0 + w1 + w2, y0 + h), 6, fill=brand["band"] + (235,))
+    pd.rounded_rectangle((x0, y0, x0 + w1 + 8, y0 + h), 6, fill=brand["accent"] + (255,))
+    pd.rectangle((x0 + w1 - 6, y0, x0 + w1, y0 + h), fill=brand["accent"] + (255,))  # square the inner edge
+    canvas.paste(Image.alpha_composite(base, panel).convert("RGB"))
     d = ImageDraw.Draw(canvas)
-    d.rounded_rectangle(box, 6, fill=fill)
-    draw_tracked(d, (box[0] + pad_x, box[1] + pad_y - 3), text, font, ink, tracking)
+    draw_tracked(d, (x0 + pad, y0 + (h - f_name.size) // 2 - 3), name, f_name, brand["band"], track)
+    draw_tracked(d, (x0 + w1 + pad, y0 + (h - f_role.size) // 2 - 2), role, f_role, brand["text"], track)
 
 
 def render(slide):
@@ -173,7 +182,7 @@ def render(slide):
         photo = retouch(photo, slide["retouch"])
     canvas.paste(fit_photo(photo, SIZE, SIZE - BAND_H, slide["focus"], slide.get("zoom", 1.0)), (0, 0))
     if slide.get("tag"):
-        draw_tag(canvas, slide["tag"], b["accent"], b["band"], b["font_head"])
+        draw_tag(canvas, slide["tag"], b)
 
     # Logo, vertically centered in the band
     logo_h = BAND_H - 60
