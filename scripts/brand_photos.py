@@ -23,6 +23,9 @@ BRAND = {
 }
 
 SIZE = 1080       # square post
+TINT = 0.32       # uniform darkening of the photo (0 = none, 1 = black)
+FADE = 0.45       # extra darkening at the bottom edge, fading in to the band
+FADE_H = 0.45     # how much of the photo height the fade covers
 BAND_H = 190      # height of the branded band
 PAD = 48          # side padding
 
@@ -32,15 +35,15 @@ SLIDES = [
         "photo": ROOT / "photos" / "lunch-selfie-01.jpg",
         "focus": (750, 1000),
         "headline": "LEADERSHIP LUNCH",
-        "subline": "Building relationships that build the trades.",
-        "out": ROOT / "output" / "post-1-leadership-lunch.png",
+        "subline": "With Jacob Stultz, Stultz Plumbing",
+        "out": ROOT / "output" / "leadership-lunch-jacob-stultz-1.png",
     },
     {
         "photo": ROOT / "photos" / "lunch-table-02.jpg",
         "focus": (720, 895),
         "headline": "BUILDING RELATIONSHIPS",
         "subline": "Good food. Real conversations. Better businesses.",
-        "out": ROOT / "output" / "post-2-building-relationships.png",
+        "out": ROOT / "output" / "leadership-lunch-jacob-stultz-2.png",
     },
 ]
 
@@ -53,6 +56,15 @@ def cover_crop(img, w, h, focus):
     left = min(max(int(focus[0] - cw / 2), 0), iw - cw)
     top = min(max(int(focus[1] - ch / 2), 0), ih - ch)
     return img.crop((left, top, left + cw, top + ch)).resize((w, h), Image.LANCZOS)
+
+
+def darken(img, color):
+    """Tint the whole photo, then fade its bottom edge into the band color."""
+    img = Image.blend(img, Image.new("RGB", img.size, color), TINT)
+    fade_h = int(img.height * FADE_H)
+    ramp = Image.linear_gradient("L").resize((img.width, fade_h)).point(lambda v: int(v * FADE))
+    img.paste(Image.new("RGB", (img.width, fade_h), color), (0, img.height - fade_h), ramp)
+    return img
 
 
 def tinted_logo(path, height, color):
@@ -87,7 +99,7 @@ def render(slide):
     b = BRAND
     canvas = Image.new("RGB", (SIZE, SIZE), b["band"])
     photo = Image.open(slide["photo"]).convert("RGB")
-    canvas.paste(cover_crop(photo, SIZE, SIZE - BAND_H, slide["focus"]), (0, 0))
+    canvas.paste(darken(cover_crop(photo, SIZE, SIZE - BAND_H, slide["focus"]), b["band"]), (0, 0))
 
     # Logo, vertically centered in the band
     logo_h = BAND_H - 60
