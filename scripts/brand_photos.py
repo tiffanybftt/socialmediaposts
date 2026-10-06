@@ -44,16 +44,9 @@ SLIDES = [
     {
         "photo": ROOT / "photos" / "lunch-selfie-01.jpg",
         "focus": (750, 1000),
-        "headline": "LEADERSHIP LUNCH",
-        "subline": "With Jacob Stultz, Stultz Plumbing",
-        "out": ROOT / "output" / "leadership-lunch-jacob-stultz-1.png",
-    },
-    {
-        "photo": ROOT / "photos" / "lunch-table-02.jpg",
-        "focus": (720, 895),
         "headline": "BUILDING RELATIONSHIPS",
         "subline": "Good food. Real conversations. Better businesses.",
-        "out": ROOT / "output" / "leadership-lunch-jacob-stultz-2.png",
+        "out": ROOT / "output" / "leadership-lunch.png",
     },
 ]
 

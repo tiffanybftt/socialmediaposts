@@ -1,5 +1,5 @@
-POST NAME: Leadership Lunch with Jacob Stultz
-IMAGES:    leadership-lunch-jacob-stultz-1.png, leadership-lunch-jacob-stultz-2.png (carousel, in that order)
+POST NAME: Leadership Lunch
+IMAGE:     leadership-lunch.jpg (1080x1080, upload-ready)
 
 CAPTION
 Leadership lunch with Jacob Stultz of Stultz Plumbing.
