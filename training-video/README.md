@@ -5,7 +5,7 @@ slide, caption and the voice-over come from the files in this folder and can be 
 
 | File | What it is |
 |---|---|
-| `ai-summit-claude-training.mp4` | The finished video (1080p, narration + soft music + burned-in captions) |
+| `ai-summit-claude-training-final.mp4` | The finished video (1080p, your narration, neo-soul music, burned-in captions). The other .mp4 files are older drafts |
 | `RECORDING_SCRIPT.pdf` / `.md` | A script to record in your own voice: 10 short takes with delivery notes |
 | `SCRIPT.md` | The narration, scene by scene (generated from `episode/script.json`) |
 | `voice-samples/` | Sample clips of the same line in different AI voices |
