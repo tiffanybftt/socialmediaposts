@@ -11,6 +11,9 @@ import re
 import sys
 from pathlib import Path
 
+import numpy as np
+import soundfile as sf
+
 ROOT = Path(__file__).resolve().parent.parent
 rec = Path(sys.argv[1])
 script = json.loads((ROOT / "episode" / "script.json").read_text())
@@ -62,8 +65,36 @@ def align(script_words, asr_words):
     return match
 
 
+def loudness_track(path: Path):
+    """10 ms loudness curve of the raw take, plus a speech/silence threshold halfway up from the noise floor."""
+    x, sr = sf.read(path, dtype="float32")
+    n = sr // 100
+    fr = x[: len(x) // n * n].reshape(-1, n)
+    db = 20 * np.log10(np.sqrt((fr ** 2).mean(axis=1)) + 1e-9)
+    return db, np.percentile(db, 8) + 0.55 * (np.percentile(db, 90) - np.percentile(db, 8))
+
+
+def snap_start(db, thr, t0):
+    """Speech-to-text often places the first word early. Find where the voice really starts near t0."""
+    lo = int(max(0, t0 - 0.2) * 100)
+    if db[lo] >= thr:  # already talking: the sentence follows straight on, so the speech-to-text time is right
+        return t0
+    for i in range(lo, min(int((t0 + 1.2) * 100), len(db) - 3)):
+        if all(db[i:i + 3] >= thr):
+            return max(t0 - 0.2, i / 100 - 0.06)
+    return t0
+
+
+def snap_end(db, thr, t1):
+    for i in range(min(int((t1 + 0.3) * 100), len(db) - 1), int(max(3, (t1 - 1.0) * 100)), -1):
+        if all(db[i - 2:i + 1] >= thr):
+            return i / 100 + 0.12
+    return t1
+
+
 result, problems = {}, []
 for take, ids in takes.items():
+    db, thr = loudness_track(rec / f"take_{take}.wav")
     words = asr[take]["words"]
     asr_tok = [norm(w["w"]) for w in words]
     keep = [k for k, t in enumerate(asr_tok) if t]
@@ -83,8 +114,14 @@ for take, ids in takes.items():
         if not idx:
             problems.append(f"take {take}: sentence {sid} not found in the recording")
             continue
-        start, end = words[min(idx)]["s"], words[max(idx)]["e"]
-        result[take]["sentences"][sid] = {"start": start, "end": end, "matched": len(idx), "words": total}
+        asr_start, asr_end = words[min(idx)]["s"], words[max(idx)]["e"]
+        start, end = snap_start(db, thr, asr_start), snap_end(db, thr, asr_end)
+        if end <= start:
+            start, end = asr_start, asr_end
+        result[take]["sentences"][sid] = {"start": start, "end": end, "matched": len(idx), "words": total,
+                                          "asr_start": asr_start, "asr_end": asr_end}
+        if abs(start - asr_start) > 0.2:
+            print(f"  take {take} {sid}: start moved {start - asr_start:+.2f}s to where the voice actually begins")
         if len(idx) / total < 0.85:
             problems.append(f"take {take}: sentence {sid} only {len(idx)}/{total} words matched: "
                             f"heard '{' '.join(w['w'] for w in words[min(idx):max(idx) + 1])}'")

@@ -29,6 +29,9 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
 #bg{position:absolute;left:0;bottom:0;width:1920px;height:340px;overflow:hidden}
 #bg svg{position:absolute;left:0;bottom:0;width:3840px;height:340px}
 
+#confetti{position:absolute;inset:0;pointer-events:none}
+.cf{position:absolute;left:0;top:0;opacity:0;will-change:transform}
+
 /* persistent chrome */
 #brand{position:absolute;left:64px;top:38px;display:flex;align-items:center;gap:16px;opacity:0}
 #brand img{height:58px;display:block}
@@ -340,6 +343,7 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
     <div class="a fine" id="finenote" data-cue="c4" data-delay="1.4" data-anim="fade" style="top:628px"></div>
   </section>
 
+  <div id="confetti"></div>
   <div id="caption"><div id="captext"></div></div>
 
   <div id="trail">
@@ -357,7 +361,8 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
   const TL = window.TIMELINE;
   const clamp = (x,a=0,b=1)=>Math.min(b,Math.max(a,x));
   const easeOut = p=>1-Math.pow(1-p,3);
-  const easeBack = p=>{const c1=1.35,c3=c1+1;return 1+c3*Math.pow(p-1,3)+c1*Math.pow(p-1,2)};
+  const UP = window.TIMELINE.style==='upbeat';  // upbeat: snappier entrances, bouncier pops, faster drift, confetti
+  const easeBack = p=>{const c1=UP?2.0:1.35,c3=c1+1;return 1+c3*Math.pow(p-1,3)+c1*Math.pow(p-1,2)};
 
   const sent = {};
   TL.scenes.forEach(sc=>sc.sentences.forEach(s=>sent[s.id]=s));
@@ -377,7 +382,7 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
         const s = sent[cue]; if(!s) throw new Error('unknown cue '+cue);
         base = s.start + parseFloat(a.dataset.frac||0)*(s.end-s.start);
       }
-      return {el:a, at: base+parseFloat(a.dataset.delay||0), dur: parseFloat(a.dataset.dur||0.6),
+      return {el:a, at: base+parseFloat(a.dataset.delay||0), dur: parseFloat(a.dataset.dur||(UP?0.42:0.6)),
               until: a.dataset.until ? sent[a.dataset.until].start-0.05 : null, type: a.dataset.anim||'fade'};
     });
     return {el, sc, anims, chrome: el.dataset.chrome};
@@ -424,10 +429,33 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
     }
   }
 
+  // confetti: a seeded burst so every render of a frame is identical
+  const confetti = [];
+  if(UP && sent.c4){
+    let seed = 20240; const rnd = ()=>{seed = (seed*1664525 + 1013904223) >>> 0; return seed/4294967296};
+    const colors = ['#F26A1B','#E5570C','#FBD3B8','#F2A71B','#32A468','#232220'];
+    const box = document.getElementById('confetti');
+    for(let k=0;k<70;k++){
+      const el = document.createElement('div'); el.className='cf';
+      const w = 10+rnd()*14, h = rnd()<0.3 ? w : 6+rnd()*7;
+      el.style.cssText = `width:${w}px;height:${h}px;background:${colors[Math.floor(rnd()*colors.length)]};border-radius:${h===w?'50%':'2px'}`;
+      box.appendChild(el);
+      confetti.push({el, t0: sent.c4.start+0.3+rnd()*0.25, x0: 960+(rnd()-0.5)*520, y0: 330,
+                     vx: (rnd()-0.5)*1900, vy: -350-rnd()*800, rot: (rnd()-0.5)*1800, r0: rnd()*360});
+    }
+  }
+
   window.render = function(t){
+    confetti.forEach(c=>{
+      const s=t-c.t0, life=2.8;
+      if(s<0||s>life){c.el.style.opacity=0;return}
+      const x=c.x0+c.vx*(1-Math.exp(-1.6*s))/1.6, y=c.y0+c.vy*s+0.5*1100*s*s;
+      c.el.style.opacity=clamp((life-s)/0.7);
+      c.el.style.transform=`translate(${x}px,${y}px) rotate(${c.r0+c.rot*s}deg)`;
+    });
     // background drift
-    ridge1.style.transform=`translateX(${-((t*9)%1920)}px)`;
-    ridge2.style.transform=`translateX(${-((t*4)%1920)}px)`;
+    ridge1.style.transform=`translateX(${-((t*(UP?15:9))%1920)}px)`;
+    ridge2.style.transform=`translateX(${-((t*(UP?7:4))%1920)}px)`;
 
     // scenes
     sceneEls.forEach(S=>{

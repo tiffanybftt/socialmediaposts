@@ -50,7 +50,7 @@ and `"length_scale": 1.12`.
 ```bash
 python tools/prep_logo.py                       # logo cut-outs (only if the logo changes)
 python tools/build_audio.py /path/to/voice-models  # narration + build/timeline.js + captions
-python tools/make_music.py 201                   # music bed, same length as the narration (see build/timeline.json)
+python tools/make_music.py 201 calm build/timeline.json   # music bed, same length as the narration (see build/timeline.json)
 node tools/render.js 30 4                        # silent video, 4 parallel browsers (~5 min)
 tools/mix.sh                                     # mix audio onto the video
 ```
@@ -72,6 +72,11 @@ Notes:
   Then run `make_music.py`, `render.js` and `mix.sh` as above. `episode/takes.json` says which sentences belong to
   which take. If you ad-lib, edit that sentence in `episode/script.json` to match what you said so the captions agree.
   The closing card says "AI-generated voice" only when the voice is AI.
+- **Calm or upbeat.** Add `--style upbeat` to `build_audio_human.py` (it trims long pauses and switches the video to
+  snappier animations plus a confetti burst on the closing logo), and run `python tools/make_music.py <seconds> upbeat
+  build/timeline.json` for a 108 BPM groove whose whooshes, riser and crash line up with the scene changes and the logo
+  reveal. Mix it with `MUSIC_VOL=0.24 DUCK_RATIO=3 tools/mix.sh out.mp4` so the music is a little more present.
+  The first take of each scene is snapped to where your voice really starts, because speech-to-text places it early.
 - **Record quietly.** Keep the input level low enough that the meter never hits red. Clipped takes can't be repaired.
   Do a 10-second test and listen back before recording the full thing.
 
