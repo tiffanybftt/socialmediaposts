@@ -18,9 +18,15 @@ src, rec = Path(sys.argv[1]), Path(sys.argv[2])
 model_dir = sys.argv[3] if len(sys.argv) > 3 else str(rec.parent / "whisper")
 rec.mkdir(parents=True, exist_ok=True)
 
+wanted = list(json.loads((Path(__file__).resolve().parent.parent / "episode" / "takes.json").read_text()))
 files = {}
-for f in sorted(src.glob("*Take_*.m4a")):
-    files[re.search(r"Take_([0-9a-z]+)\.m4a$", f.name).group(1)] = f  # a later upload of the same take wins
+for f in sorted(src.glob("*Take_*.m4a"), key=lambda p: p.stat().st_mtime):  # the newest upload of a take wins
+    take = re.search(r"Take_([0-9a-z]+)\.m4a$", f.name).group(1)
+    if take in wanted:
+        files[take] = f
+missing = [t for t in wanted if t not in files]
+if missing:
+    print("WARNING: no recording found for take(s):", ", ".join(missing))
 
 model = WhisperModel("small.en", device="cpu", compute_type="int8", cpu_threads=4, download_root=model_dir)
 prompt = "Claude, Anthropic, API, ID, Gmail, Drive. Using Claude with confidence: privacy, security, accuracy, authenticity."

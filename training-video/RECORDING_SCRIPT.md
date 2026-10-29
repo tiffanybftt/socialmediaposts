@@ -1,160 +1,152 @@
 # Recording script: "Using Claude With Confidence"
 
-**About 3½ minutes · 11 short takes · read it in your own voice**
+**About 5½ minutes · 10 takes · read it in your own voice**
 
 ---
 
 ## Before you record
 
+- **Keep your level LOW.** Your last recordings were too loud and clipped (flat-topped peaks). Clipping can't be repaired. Do a 10-second test, play it back, and check that the meter never touches red. Hold the phone 8 to 10 inches from your mouth, a little off to the side, and speak at a normal conversational volume. If your app has "boost," "enhance," or auto-gain, turn it off.
 - **Quiet room, soft surroundings.** A closet, a car, or a room with a couch and curtains beats an empty office. Turn on airplane mode.
-- **Use your phone's voice memo app.** Hold it 6 to 8 inches from your mouth, a little off to the side so breaths don't pop.
-- **One file per take.** There are 11 short takes below. Name each file with its number (`1-intro`, `2-told-us`, and so on). Any format is fine (m4a, wav, mp3).
+- **One file per take.** There are 10 takes below. Name each file with its number (`Take_1`, `Take_2`, `Take_5a`, and so on). Any format is fine (m4a, wav, mp3).
 - **Leave 2 seconds of quiet** at the start and end of every take.
-- **Read the lines as written.** The on-screen captions use these exact words. If you want to change a line, tell me and I'll change the captions to match. A personal hello before "Welcome, team" is fine; I'll leave it out of the captions.
-- **Slower than feels natural.** Imagine you're talking to one teammate across the table. Smile on the first and last takes. It really does come through.
+- **Read the lines as written.** The on-screen captions use these exact words. If you change a line, tell me and I'll change the captions to match.
+- **Slower than feels natural.** Imagine you're talking to one teammate across the table. Smile on the first and last takes. It comes through.
 - **Flubbed a line?** Take a breath and say the whole sentence again, then keep going. Tell me which line you redid.
 
 **Marks used below:** **bold** = lean on that word · `(beat)` = pause about one second, so the visual can land · lists (like the red, yellow and green items) should go up a little on each item and drop on the last one.
 
-**Pronunciation:** Claude = "klawd" · Anthropic = "an-THROP-ik" · API = "A-P-I" · ID = "I-D"
-
-> ⚠️ **Check before Take 4.** It says that on a Team or Enterprise plan, Anthropic doesn't train its models on your conversations by default, and tells people to stick to "our approved work account." Make sure both are true for your team. If not, tell me and I'll rewrite the line before you record.
+**Pronunciation:** Claude = "klawd" · Anthropic = "an-THROP-ik" · API = "A-P-I" · NDA = "N-D-A" · Fathom = "FATH-um"
 
 ---
 
-## Take 1 · Intro (about 15 sec)
+## Take 1 · Intro (about 40 sec)
 
-_On screen: your logo animates in, then the title "Using Claude with Confidence." Smile like you're greeting people as they walk in._
+_On screen: your logo animates in, then the title. When you say the Tuesday question, it appears on a card. Warm and personal, like you're talking to the team in the group chat._
 
-Welcome, team. `(beat)`
+Hey Built For The Trades Team, it's Tiffany. `(beat)` Welcome to this week's AI Training Video.
 
-AI is changing **every** industry, and **fast**. It can speed up our work and keep our workflows consistent.
+Thank you for answering the question, "What's one thing about using AI that makes you hesitant?" `(beat)`
 
-But you told us you have real questions about **privacy**, **security**, and **trust**. `(beat)` And that's exactly why we're here.
+You all had a lot of **great** responses. Your worries are **reasonable**, and you're **not alone** in having them.
 
----
-
-## Take 2 · What you told us (about 20 sec)
-
-_On screen: four cards pop up one at a time. Leave a clear beat between the four themes so each card can appear. Warm tone, like "we heard you."_
-
-We read every one of your responses, and four themes stood out. `(beat)`
-
-**Privacy and security.** Is our information, and our clients' information, safe? `(beat)`
-
-**Accuracy.** Can we trust what it tells us? `(beat)`
-
-**Authenticity.** Will we lose our human touch? `(beat)`
-
-And **balance.** How much should we share with it?
+I'd like to address your hesitations in this video to give you **peace of mind** while navigating Claude. `(beat)` I'll be straight with you about what's solid and what's still a risk, and we'll take it one step at a time.
 
 ---
 
-## Take 3 · The big idea (about 12 sec)
+## Take 2 · What you told us (about 30 sec)
 
-_On screen: "Treat Claude like a brand-new team member," then a crossed-out "every password, day one," then three green checks._
+_On screen: four cards pop up one at a time. Leave a clear beat between the four themes so each card can appear._
+
+Four themes stood out. `(beat)`
+
+One, **privacy and security.** We're worried about whether our information, and our clients' information, is safe. `(beat)`
+
+Two, **accuracy.** We're worried about whether we can trust what it tells us, and whether there's a way to check. `(beat)`
+
+Three, **dependence.** We're worried we'll lean on it too much and lose our own creativity and ingenuity. `(beat)`
+
+And four, **balance.** We're worried about where AI belongs at Built For The Trades, and where it doesn't, so we keep the human touch and authenticity that matter so much to our brand.
+
+---
+
+## Take 3 · The big idea (about 30 sec)
+
+_On screen: "Treat Claude like a brand-new team member," then four checks (guide, check, stay in charge, train), then a "coming soon" card._
 
 Here's one idea that makes everything simpler: treat Claude like a **brand-new team member**. `(beat)`
 
-You wouldn't hand a new hire every password on day one. `(beat)` You'd **guide** them, **check** their work, and **stay in charge**.
+You'd **guide** them, **check** their work, and **stay in charge**. And you'd **train** them. `(beat)`
+
+I'll help train Claude on how we work, and in a future video we'll cover training your own Claude in your own voice and making your process more consistent. **More to come.**
 
 ---
 
-## Take 4 · Protect: where your information goes (about 30 sec) ⚠️ confirm the plan line first
+## Take 4 · Protect (about 45 sec)
 
-_On screen: three cards (Your plan, The internet, Connected apps), then a strip: "Connect only what we need · Disconnect what we stop using." Clear and steady. This is the most important part._
+_On screen: four cards (client trust, work account, connectors, recorded calls). Clear and steady. This is the most important part._
 
-First, **protect**. Know where your information goes. `(beat)`
+First, **protect.** Our clients trust us with their finances, their people, their customers, and their access. `(beat)`
 
-On a Team or Enterprise plan, Anthropic doesn't train its models on our conversations by default. On a personal account, a Model Improvement setting controls this, so check it, and stick to our approved work account. `(beat)`
+Only use our **work** Claude account. Never a personal account or a free tool. Our work plan doesn't use our conversations to train Anthropic's models by default. `(beat)`
 
-Claude reaches the internet only through features that are turned on. `(beat)`
+Connectors only show Claude what you can already see. So connect only what the job needs, and **ask before adding a new one.** `(beat)`
 
-And connected apps, like Drive or Gmail, only show Claude what you can already see. `(beat)`
-
-So connect only what we need, and disconnect anything we stop using.
+And on recorded calls, tell clients we're recording, and decide **before** the call, not during, what stays off the record. HR issues, family, health, or anything under NDA? Turn Fathom off.
 
 ---
 
-## Take 5 · The traffic light (about 25 sec)
+## Take 5a · The traffic light: red (about 25 sec)
 
-_On screen: three rows (red, yellow, green) with the items appearing as you say them. Slow down and let each item land. Say each color like you're pointing at it._
+_On screen: the traffic light title, then the red row with its items. Slow down and let each item land._
 
-Then use the **traffic light**. `(beat)`
+Then use the **traffic light.** `(beat)`
 
-**Red** means **never** share: passwords and logins, A-P-I keys, full card or bank numbers, and Social Security or government I-D numbers. `(beat)`
+**Red** means **never** put it in Claude: passwords, logins, API keys, bank or card numbers, and Social Security numbers. We keep using our own logins, and clients screen-share instead of signing in for us.
 
-**Yellow** means ask first, and only in approved tools: client details, anything under a confidentiality agreement, and employee, payroll or medical records. `(beat)`
+## Take 5b · The traffic light: yellow and green (about 40 sec)
 
-**Green** means go ahead: your own drafts, public information, and ideas.
+_On screen: the yellow row with its items, then four rules appear one by one, then the green row._
+
+**Yellow** is the work we do every day: financials, employee details, customer names and phone numbers, call transcripts, and personal goals. It's allowed, **with rules.** `(beat)`
+
+**One** client at a time. **Only** the fields the task needs. Swap names and numbers for **codes** when Claude doesn't need them, and put the real ones back at the end. And a **person** checks every name and number before it goes out. `(beat)`
+
+**Green** means go ahead: our own frameworks and anything public.
 
 ---
 
-## Take 6a · Concern 1: Accuracy (about 15 sec)
+## Take 6a · Your concerns: privacy and accuracy (about 30 sec)
 
-_On screen: a list of five concerns with "Accuracy" highlighted, then "Verify, then trust."_
+_On screen: four concerns listed on the left, with the current one highlighted and its answer on the right._
 
 Now, your concerns, answered. `(beat)`
 
-**Accuracy.** Claude can sound confident and still be wrong. `(beat)`
+One, **privacy and security.** We just covered it. Work account only, and nothing from the red list. `(beat)`
 
-It makes what you already know better. It doesn't replace your judgment, so spot-check names, numbers, and claims.
+Two, **accuracy.** Yes, there's a way to check. `(beat)`
 
-## Take 6b · Concern 2: Human touch (about 12 sec)
+Claude can sound confident and still be wrong, so verify what matters: names, numbers, dates, prices, and quotes. Ask where it got something, then check the source yourself. And **nothing** goes to a client until a person has read it.
 
-_On screen: "Claude drafts. You decide."_
+## Take 6b · Your concerns: dependence (about 20 sec)
 
-Losing our human touch? Claude drafts, and **you decide**. `(beat)`
+_On screen: "Dependence" highlighted._
 
-Our voice and our relationships set us apart. The clearer the guidance and examples you give, the more it sounds like us.
+Three, **dependence.** Our clients hire us for **lived experience.** Claude hasn't run a trades business; we have. `(beat)`
 
-## Take 6c · Concern 3: How much to share (about 12 sec)
+So start with your own thinking, and let Claude help with the blank page and the polish. If you couldn't explain it to a client, don't send it.
 
-_On screen: a "too much" example next to a "just right" example._
+## Take 6c · Your concerns: balance (about 25 sec)
 
-How much to share? Share the **situation**, not the sensitive **details**. `(beat)`
+_On screen: "Balance" highlighted, with "prep and polish" next to "stays human."_
 
-Swap real names for placeholders like Client A, and give plenty of context about the task and the tone.
+And four, **balance.** `(beat)`
 
-## Take 6d · Concern 4: Structure (about 13 sec)
-
-_On screen: three steps: clear guidelines, spot-check, fine-tune._
-
-Like any new hire, Claude does best with **structure**. `(beat)`
-
-Give it clear guidelines, spot-check its work, and fine-tune over time. Messy processes only get messy faster, so **structure first**, then test.
-
-## Take 6e · Concern 5: Data breaches (about 14 sec)
-
-_On screen: four stacked layers of protection._
-
-And data breaches? No tool is risk-free, so we protect in **layers**. `(beat)`
-
-Approved tools, strong unique passwords with two-step login, the traffic light rules, and speaking up right away if something sensitive is shared by mistake.
+Claude belongs in the prep and the polish: first drafts, reports, show notes, social posts, and spotting patterns in a spreadsheet. `(beat)` It doesn't belong in the room: the hard conversation with an owner, the personal goal setting, the coaching itself. **That stays human.**
 
 ---
 
-## Take 7 · Close (about 22 sec)
+## Take 7 · Close (about 25 sec)
 
-_On screen: the four pillars, then "Thank you for asking honest questions," then your logo. Lift your energy here. This is the "view from the summit" moment, so smile and slow down on the last line._
+_On screen: the four pillars, then "Thank you for being honest," then your logo with confetti. Lift your energy here. This is the "view from the summit" moment, so smile and slow down on the last line._
 
 So here's the view from the summit. `(beat)`
 
-**Protect** what matters. **Verify** what it gives you. **Stay human.** `(beat)` And guide Claude like a new team member. `(beat)`
+**Protect** what our clients trust us with. **Check** what Claude gives you. Keep the **human touch.** `(beat)` And **teach** Claude how we work, with more to come on that. `(beat)`
 
-Claude is here to support your judgment, not replace it. And thank you for asking honest questions, because that's what makes this team strong. `(beat)`
+Thank you for being honest about your hesitations. `(beat)`
 
-Keep the questions coming, and let's go build something great.
+Keep the questions coming on Tuesday, and let's go build something great.
 
 ---
 
 ## When you're done
 
-Send me the 11 files. Attach them in chat. If they don't come through (images haven't so far), upload them on GitHub to `training-video/recordings/` on the `claude/ecstatic-fermi-4m3k8t` branch and tell me the filenames.
+Send me the 10 files. Attach them in chat, which worked last time.
 
 What I'll do with them:
-1. Use speech-to-text to find where each sentence starts and ends, so the slides and captions follow **your** pacing.
-2. Change the last-slide note from "Narration is an AI-generated voice" to "Script and visuals created with the help of Claude," since the voice will be yours.
+1. Use speech-to-text on this machine to find where each sentence starts and ends, so the slides and captions follow **your** pacing.
+2. Check the audio levels and tell you right away if anything is too loud or too quiet.
 3. Keep the soft music quietly under your voice, then send you the finished video.
 
 **Please watch the final video all the way through before sharing it with the team.**
