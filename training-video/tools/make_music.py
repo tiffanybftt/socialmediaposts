@@ -1,9 +1,10 @@
 """Synthesize an original background bed so there is nothing to license.
 
-usage: python make_music.py <duration_seconds> [calm|upbeat] [timeline.json]   ->  build/music.wav (44.1 kHz stereo)
+usage: python make_music.py <duration_seconds> [calm|upbeat|neosoul] [timeline.json] [soundfont.sf2]   ->  build/music.wav (44.1 kHz stereo)
 
 calm:   soft pad and gentle plucks at 76 BPM
-neosoul: 88 BPM laid-back groove: deep round bass, light drums (snare a touch behind the beat), warm electric piano chords
+neosoul: 88 BPM laid-back groove with real instruments: sampled grand piano holding soft chords, a sampled drum kit,
+        and a round bass that drives the melody (needs tinysoundfont and a General MIDI SoundFont)
 upbeat: 108 BPM groove (kick, clap, hats, bass, plucks) that follows the video: whooshes at scene changes, a
         riser and crash on the closing logo reveal, then a chord that rings out. Needs the timeline to find them.
 """
@@ -17,7 +18,7 @@ import numpy as np
 SR = 44100
 duration = float(sys.argv[1])
 style = sys.argv[2] if len(sys.argv) > 2 else "calm"
-timeline = json.loads(Path(sys.argv[3]).read_text()) if len(sys.argv) > 3 else None
+timeline = json.loads(Path(sys.argv[3]).read_text()) if len(sys.argv) > 3 and sys.argv[3] not in ("", "-") else None
 n = int(duration * SR)
 rng = np.random.default_rng(7)
 
@@ -209,7 +210,20 @@ def upbeat():
 
 
 def neosoul():
-    """Laid-back neo-soul: round bass, light drums behind the beat, warm electric piano with lush chords."""
+    """Laid-back neo-soul with real instruments: a sampled grand piano holding soft chords, a sampled drum kit,
+    and a round synth bass that drives the groove and carries the melody.
+
+    Needs `tinysoundfont` and a General MIDI SoundFont (e.g. FluidR3_GM.sf2, MIT licensed). Pass its path as the
+    4th argument or set the SOUNDFONT environment variable.
+    """
+    import os
+
+    import tinysoundfont
+
+    sf_path = sys.argv[4] if len(sys.argv) > 4 else os.environ.get("SOUNDFONT", "")
+    if not Path(sf_path).is_file():
+        raise SystemExit("neosoul needs a General MIDI SoundFont: pass its path as the 4th argument or set SOUNDFONT")
+
     BPM = 88
     BEAT = 60 / BPM
     SIX = BEAT / 4  # one sixteenth note
@@ -224,41 +238,25 @@ def neosoul():
     kL = 4 * L
     tb = lambda k: g0 + k * BEAT
 
-    # bass root (midi), comping notes (a 3rd, 5th, 7th and 9th voicing), bass 5th
+    # bass root (midi), piano voicing (soft, no root: the bass has it), chord quality
     CH = {
-        "Dmaj9": (38, (66, 69, 73, 76)), "Bm9": (35, (62, 66, 69, 73)), "Em9": (40, (67, 71, 74, 78)), "A13": (33, (61, 67, 71, 76)),
-        "Gmaj9": (43, (59, 62, 66, 69)), "F#m7": (42, (57, 61, 64, 68)),
+        "Dmaj9": (38, (57, 61, 64, 66), "maj"), "Bm9": (35, (57, 61, 62, 66), "min"), "Em9": (40, (55, 59, 62, 66), "min"),
+        "A13": (33, (55, 59, 61, 66), "dom"), "Gmaj9": (43, (59, 62, 66, 69), "maj"), "F#m7": (42, (57, 61, 64, 68), "min"),
     }
+    INTERVAL = {"maj": {"r": 0, "3": 4, "5": 7, "7": 11, "o": 12}, "min": {"r": 0, "3": 3, "5": 7, "7": 10, "o": 12},
+                "dom": {"r": 0, "3": 4, "5": 7, "7": 10, "o": 12}}
     FORM = ["Dmaj9", "Bm9", "Em9", "A13", "Gmaj9", "F#m7", "Em9", "A13"]  # I vi ii V, IV iii ii V
-    # ending, in beats after the logo bar starts: the last chord lands as late as it can while still ringing for ~3 s
+    # ending, in beats after the logo bar starts: the last chord lands as late as it can while still ringing for ~3.6 s
     remaining = duration - logo_t
-    FINAL_B = next((b for b in (8, 6, 4) if remaining - b * BEAT >= 2.9), 4)
+    FINAL_B = next((b for b in (8, 6, 4) if remaining - b * BEAT >= 3.6), 4)
     END = {8: [(0, 4, "Dmaj9"), (4, 2, "Em9"), (6, 2, "A13")], 6: [(0, 4, "Dmaj9"), (4, 2, "A13")], 4: [(0, 2, "Em9"), (2, 2, "A13")]}[FINAL_B]
     END = END + [(FINAL_B, None, "Dmaj9")]
 
-    def band_noise(seconds, lo, hi):
-        length = int(seconds * SR)
-        spec = np.fft.rfft(rng.standard_normal(length))
-        f = np.fft.rfftfreq(length, 1 / SR)
-        spec[(f < lo) | (f > hi)] = 0
-        x = np.fft.irfft(spec, length)
-        return x / np.abs(x).max()
-
-    snare_noise, hat_noise, crash_noise = band_noise(0.3, 1500, 6500), band_noise(0.3, 6500, 14000), band_noise(3.0, 3000, 16000)
-
-    def keys(midi, seconds, gain):
-        """Warm electric piano: a soft FM tine, two slightly detuned voices, a gentle tremolo."""
-        tt = np.arange(int(seconds * SR)) / SR
-        sig = 0
-        for det in (-0.0035, 0.0035):
-            f = hz(midi) * (1 + det)
-            index = 1.4 * np.exp(-tt / 0.14) + 0.18
-            sig = sig + np.sin(2 * np.pi * f * tt + index * np.sin(2 * np.pi * f * tt))
-        sig = sig * np.exp(-tt / 1.1) * (1 + 0.1 * np.sin(2 * np.pi * 4.6 * tt))
-        a, r = int(0.006 * SR), min(int(0.1 * SR), len(sig) // 2)
-        sig[:a] *= np.linspace(0, 1, a)
-        sig[-r:] *= np.linspace(1, 0, r)
-        return sig * gain
+    # bass line, per bar: (sixteenth position, length in sixteenths, chord tone). "ap" leads into the next chord.
+    BASS_T = [
+        [(0, 3, "r"), (3, 1, "o"), (4, 2, "5"), (6, 1, "3"), (8, 3, "r"), (11, 1, "7"), (12, 2, "5"), (14, 2, "ap")],
+        [(0, 2, "r"), (2, 2, "5"), (4, 1, "o"), (5, 1, "7"), (6, 2, "5"), (8, 2, "3"), (10, 2, "r"), (12, 1, "5"), (13, 1, "3"), (14, 2, "ap")],
+    ]
 
     def bass(midi, seconds, gain):
         """Round electric bass: strong low harmonics so it still reads on laptop speakers."""
@@ -270,81 +268,136 @@ def neosoul():
         sig[-r:] *= np.linspace(1, 0, r)
         return sig * gain
 
-    def kick():
-        tt = np.arange(int(0.3 * SR)) / SR
-        return np.sin(2 * np.pi * np.cumsum(50 + 75 * np.exp(-tt / 0.03)) / SR) * np.exp(-tt / 0.13)
+    class Sf:
+        """A tiny sequencer for the SoundFont synth: collect timed events, then render them to audio."""
 
-    def snare(vel):
-        tt = np.arange(int(0.25 * SR)) / SR
-        body = np.sin(2 * np.pi * 190 * tt) * np.exp(-tt / 0.045)
-        return (body * 0.7 + snare_noise[: len(tt)] * np.exp(-tt / 0.06) * 0.55 + np.sin(2 * np.pi * 1800 * tt) * np.exp(-tt / 0.008) * 0.3) * vel
+        def __init__(self, setup):
+            self.sy = tinysoundfont.Synth(samplerate=SR)
+            sfid = self.sy.sfload(sf_path)
+            for chan, bank, preset, drums in setup:
+                self.sy.program_select(chan, sfid, bank, preset, drums)
+            self.ev = []
 
-    def hat(open_=False):
-        tt = np.arange(int(0.3 * SR)) / SR
-        return hat_noise[: len(tt)] * np.exp(-tt / (0.12 if open_ else 0.02))
+        def on(self, t, chan, key, vel):
+            self.ev.append((t, 2, chan, key, int(np.clip(vel, 1, 127))))
 
+        def off(self, t, chan, key):
+            self.ev.append((t, 0, chan, key, 0))
+
+        def pedal(self, t, down):
+            self.ev.append((t, 1, 0, 64, 127 if down else 0))
+
+        def render(self):
+            out, pos = np.zeros((n, 2), np.float32), 0
+            for t, kind, chan, a, b in sorted(self.ev, key=lambda e: (e[0], e[1])):
+                idx = min(n, max(pos, int(round(t * SR))))
+                if idx > pos:
+                    out[pos:idx] = np.frombuffer(self.sy.generate(idx - pos), dtype=np.float32).reshape(-1, 2)
+                    pos = idx
+                if kind == 2:
+                    self.sy.noteon(chan, a, b)
+                elif kind == 0:
+                    self.sy.noteoff(chan, a)
+                else:
+                    self.sy.control_change(chan, a, b)
+            if pos < n:
+                out[pos:] = np.frombuffer(self.sy.generate(n - pos), dtype=np.float32).reshape(-1, 2)
+            return out.T.astype(np.float64)
+
+    piano, kit, fx = Sf([(0, 0, 0, False)]), Sf([(9, 128, 8, True)]), Sf([(3, 0, 11, False)])  # grand piano, room kit, vibraphone
+    KICK, SNARE, HAT, CRASH = 36, 38, 42, 49
     jitter = lambda: float(rng.uniform(-0.006, 0.006))  # small, deterministic human timing
-
-    # groove for each bar: (sixteenth position, length in sixteenths) for the bass; kick positions; keys hits
-    BASS = [[(0, 6), (6, 2), (10, 3), (14, 2)], [(0, 5), (7, 2), (11, 2), (14, 2)]]
-    KICKS = [(0, 6, 10), (0, 7, 11)]
-    KEYS = [[(0, 6), (7, 3), (12, 4)], [(2, 5), (8, 4), (14, 2)]]
+    vary = lambda base: base + int(rng.integers(-5, 6))
 
     segs = [(k, 4, FORM[((k // 4) - L) % 8], ((k // 4) - L) % 8) for k in range(-4, kL, 4)]
     segs += [(kL + b, ln, ch, None) for b, ln, ch in END]
 
-    dry, wet = np.zeros((2, n)), np.zeros((2, n))
+    dry = np.zeros((2, n))  # the bass
     for i, (k, ln, name, idx) in enumerate(segs):
-        root, voicing = CH[name]
+        root, voicing, kind = CH[name]
+        iv = INTERVAL[kind]
         nxt = CH[segs[i + 1][2]][0] if i + 1 < len(segs) else root
         approach = nxt + (2 if root > nxt else -1)
+        t0 = tb(k)
         if ln is None:  # final chord: it just rings out
-            add(dry, bass(root, 3.5, 0.17), tb(k))
+            add(dry, bass(root, 3.5, 1.3), t0)
+            piano.pedal(t0 - 0.03, True)
             for j, m in enumerate(voicing):
-                add(wet, keys(m, 4.6, 0.1), tb(k) + 0.014 * j)
-            add(dry, kick(), tb(k), gain=0.3)
-            add(wet, crash_noise[: int(2.2 * SR)] * np.exp(-np.arange(int(2.2 * SR)) / SR / 0.8), tb(k), gain=0.12)
+                piano.on(t0 + 0.014 * j, 0, m, 82 - 2 * j)
+                piano.off(t0 + 4.4, 0, m)
+            kit.on(t0, 9, KICK, 76)
+            kit.on(t0, 9, CRASH, 64)
             for j, m in enumerate((78, 81, 85, 88)):
-                add(wet, keys(m, 2.4, 0.05), tb(k) + 0.11 * j, pan=-0.4 + 0.27 * j)
+                fx.on(t0 + 0.12 * j, 3, m, 64)
+                fx.off(t0 + 2.4, 3, m)
             continue
-        pat = (idx if idx is not None else 0) % 2
-        lowest = tb(k)
-        if ln == 4:
-            for pos, length in BASS[pat]:
-                m = approach if pos == 14 else (root + 7 if pos == 10 else (root + 12 if pos == 7 else root))
-                add(dry, bass(m, length * SIX * 0.95, 0.17), lowest + pos * SIX + jitter())
-            for pos, length in KEYS[pat]:
-                for j, m in enumerate(voicing):
-                    add(wet, keys(m, length * SIX, 0.1), lowest + pos * SIX + 0.012 * j + jitter())
-        else:  # two-beat ending chords
-            add(dry, bass(root, 1.4 * BEAT, 0.17), lowest)
-            add(dry, bass(approach, 0.5 * BEAT, 0.16), lowest + 1.5 * BEAT)
-            for j, m in enumerate(voicing):
-                add(wet, keys(m, 1.8 * BEAT, 0.1), lowest + 0.012 * j)
-        if k >= 8 and k < kL + FINAL_B and ln == 4:  # light drums: soft kick, rim on 2 and 4 a touch late, ghost notes, loose hats
-            for pos in KICKS[pat]:
-                add(dry, kick(), lowest + pos * SIX + jitter(), gain=0.3)
-            for pos, vel in ((4, 0.3), (12, 0.3), (9, 0.07), (15, 0.08)):
-                add(wet, snare(vel), lowest + pos * SIX + (0.022 if vel > 0.2 else 0.012) + jitter(), pan=0.1)
+
+        # bass: the driving, melodic line
+        template = BASS_T[(idx if idx is not None else 0) % 2] if ln == 4 else [(0, 6, "r"), (6, 1, "ap")]
+        for pos, length, tone in template:
+            midi = approach if tone == "ap" else root + iv[tone]
+            add(dry, bass(midi, max(length * SIX * 0.95, 0.12), 1.0), t0 + pos * SIX + jitter())
+
+        # piano: one soft chord a bar, held with the pedal
+        hold = ln * BEAT - 0.5 * BEAT
+        piano.pedal(t0 - 0.03, True)
+        for j, m in enumerate(voicing):
+            piano.on(t0 + 0.012 * j + max(0.0, jitter()), 0, m, vary(54) - 2 * j)
+            piano.off(t0 + hold, 0, m)
+        if ln == 4 and (idx if idx is not None else 0) % 2 == 0:  # a quiet re-voicing on beat 3
+            for j, m in enumerate(voicing[1:]):
+                piano.on(t0 + 2 * BEAT + 0.012 * j, 0, m, vary(38))
+                piano.off(t0 + 3.4 * BEAT, 0, m)
+        piano.pedal(t0 + ln * BEAT - 0.09, False)
+
+        # drums: solid kick, snare on 2 and 4 a touch behind the beat, ghost notes, steady hats
+        if k >= 8 and k < kL + FINAL_B and ln == 4:
+            pat = (idx if idx is not None else 0) % 2
+            for pos in ((0, 6, 10) if pat == 0 else (0, 7, 11)):
+                kit.on(t0 + pos * SIX + jitter(), 9, KICK, vary(96 if pos == 0 else 84))
+            fill = idx == 7
+            for pos, vel in ((4, 84), (12, 84 if not fill else 0), (9, 30), (15, 30 if not fill else 0)):
+                if vel:
+                    kit.on(t0 + pos * SIX + (0.018 if vel > 60 else 0.01) + jitter(), 9, SNARE, vary(vel))
+            if fill:  # a small build into the next chord
+                for pos, vel in ((12, 56), (13, 66), (14, 78), (15, 92)):
+                    kit.on(t0 + pos * SIX + jitter(), 9, SNARE, vary(vel))
             for pos in range(16):
-                swing = 0.12 * SIX if pos % 2 else 0.0  # the off-sixteenths lean back a little
-                gain = (0.07 if pos % 4 == 0 else 0.045 if pos % 2 == 0 else 0.025)
-                add(wet, hat(open_=(pos == 14 and pat == 0)), lowest + pos * SIX + swing + jitter(), pan=-0.3, gain=gain)
+                vel = 62 if pos % 4 == 2 else 54 if pos % 4 == 0 else 26
+                kit.on(t0 + pos * SIX + (0.1 * SIX if pos % 2 else 0.0) + jitter(), 9, HAT, vary(vel))
 
-    for sct in scene_starts:  # a soft keys note as each scene changes
-        add(wet, keys(81, 1.6, 0.05), sct - 0.3, pan=0.2)
+    for sct in scene_starts:  # a soft vibraphone note as each scene changes
+        fx.on(sct - 0.3, 3, 81, 50)
+        fx.off(sct + 1.1, 3, 81)
 
-    sw = int(1.2 * SR)  # logo reveal: a soft cymbal swell into a crash
-    add(wet, band_noise(1.2, 3000, 14000) * (np.arange(sw) / sw) ** 2.2, logo_t - 1.2, gain=0.1)
-    add(wet, crash_noise[: int(2.0 * SR)] * np.exp(-np.arange(int(2.0 * SR)) / SR / 0.7), logo_t, gain=0.12)
+    kit.on(logo_t, 9, CRASH, 88)  # logo reveal: a cymbal swell into a crash
 
-    mix = dry + wet * 0.8 + reverb(wet, 1.8, 3.0, dark=0.6) * 0.5
-    spec = np.fft.rfft(mix, axis=1)  # warm it up: roll off the top end
-    f = np.fft.rfftfreq(n, 1 / SR)
-    spec *= (1 / (1 + (f / 9000) ** 4))[None, :]
-    mix = np.fft.irfft(spec, n, axis=1)
+    def noise_band(seconds, lo, hi):
+        length = int(seconds * SR)
+        spec = np.fft.rfft(rng.standard_normal(length))
+        f = np.fft.rfftfreq(length, 1 / SR)
+        spec[(f < lo) | (f > hi)] = 0
+        x = np.fft.irfft(spec, length)
+        return x / np.abs(x).max()
+
+    swell = np.zeros((2, n))
+    sw = int(1.2 * SR)
+    add(swell, noise_band(1.2, 3000, 14000) * (np.arange(sw) / sw) ** 2.2, logo_t - 1.2, gain=0.2)
+
+    def level(x, target_db):
+        """Bring a stem to a target RMS, measured on the steady middle of the track (or all of it if that part is silent)."""
+        lo, hi = int(10 * SR), int(min(n - 5 * SR, 45 * SR))
+        window = x[:, lo:hi]
+        if np.sqrt((window ** 2).mean()) < 1e-6:
+            window = x
+        rms = np.sqrt((window ** 2).mean())
+        return x * 10 ** (target_db / 20) / rms if rms > 1e-9 else x
+
+    bass_t, drums_t, piano_t, fx_t = dry, kit.render(), piano.render(), fx.render()
+    mix = (level(bass_t, -24) + level(drums_t, -23) + level(piano_t, -27) + level(fx_t, -36) +
+           reverb(level(piano_t, -27) + level(fx_t, -36), 1.8, 3.0, dark=0.4) * 0.35 + swell * 0.04)
     print(f"neo-soul {BPM} BPM, bar lines aligned to the logo reveal at {logo_t:.1f}s, final chord at {tb(kL + FINAL_B):.1f}s")
-    finish(mix, fade_in=1.5, fade_out=2.5)
+    finish(mix, fade_in=1.5, fade_out=1.6)
 
 
 {"calm": calm, "upbeat": upbeat, "neosoul": neosoul}[style]()

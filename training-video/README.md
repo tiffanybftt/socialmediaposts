@@ -50,10 +50,16 @@ and `"length_scale": 1.12`.
 ```bash
 python tools/prep_logo.py                       # logo cut-outs (only if the logo changes)
 python tools/build_audio.py /path/to/voice-models  # narration + build/timeline.js + captions
-python tools/make_music.py 201 calm build/timeline.json   # music bed, same length as the narration (see build/timeline.json)
+python tools/make_music.py 258 neosoul build/timeline.json /path/to/FluidR3_GM.sf2   # music, same length as the narration
 node tools/render.js 30 4                        # silent video, 4 parallel browsers (~5 min)
 tools/mix.sh                                     # mix audio onto the video
 ```
+
+
+**Music.** `neosoul` plays real instruments (a sampled grand piano holding soft chords and a sampled drum kit) over a round
+synth bass that carries the melody. It needs `pip install --no-deps tinysoundfont` and a General MIDI SoundFont such as
+FluidR3_GM.sf2 (MIT licensed; the Debian package `fluid-soundfont-gm` contains it). The SoundFont is large, so it isn't in
+the repo. `calm` and `upbeat` are synthesized and need nothing extra. Mix with `MUSIC_VOL=0.45 DUCK_RATIO=3 tools/mix.sh out.mp4`.
 
 Notes:
 
