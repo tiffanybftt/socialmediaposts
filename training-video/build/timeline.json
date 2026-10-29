@@ -1,297 +1,308 @@
 {
  "title": "Using Claude With Confidence",
- "subtitle": "Privacy, security and smart habits for our team",
- "voice": "human",
- "style": "upbeat",
+ "subtitle": "Protecting our clients' trust, one habit at a time",
+ "voice": "ai",
  "scenes": [
   {
    "id": "intro",
    "phase": 0,
    "start": 0.0,
-   "end": 17.82,
+   "end": 31.216,
    "sentences": [
     {
      "id": "i1",
-     "caption": "Welcome, Built for the Trades team.",
+     "caption": "Hey Built For The Trades Team, it's Tiffany.",
      "start": 0.7,
-     "end": 2.87
+     "end": 3.132
     },
     {
      "id": "i2",
-     "caption": "AI is changing every industry, and fast. It can speed up our work and keep our workflows consistent.",
-     "start": 3.6,
-     "end": 9.84
+     "caption": "Welcome to this week's AI Training Video.",
+     "start": 3.632,
+     "end": 6.0
     },
     {
      "id": "i3",
-     "caption": "But you told us you have real questions about privacy, security, and trust. And that's exactly why we're here.",
-     "start": 10.38,
-     "end": 17.12
+     "caption": "Thank you for answering the question, \"What's one thing about using AI that makes you hesitant?\"",
+     "start": 6.5,
+     "end": 11.897
+    },
+    {
+     "id": "i4",
+     "caption": "You all had a lot of great responses.",
+     "start": 12.397,
+     "end": 14.445
+    },
+    {
+     "id": "i5",
+     "caption": "Your worries are reasonable and you're not alone in having them.",
+     "start": 14.945,
+     "end": 18.252
+    },
+    {
+     "id": "i6",
+     "caption": "I'd like to address your hesitations in this video to give you peace of mind while navigating Claude.",
+     "start": 18.752,
+     "end": 24.661
+    },
+    {
+     "id": "i7",
+     "caption": "I'll be straight with you about what's solid and what's still a risk, and we'll take it one step at a time.",
+     "start": 25.161,
+     "end": 30.516
     }
    ],
    "hold": [
-    17.52,
-    17.52
+    30.516,
+    30.516
    ]
   },
   {
    "id": "heard",
    "phase": 0,
-   "start": 17.82,
-   "end": 41.24,
+   "start": 31.216,
+   "end": 65.592,
    "sentences": [
     {
      "id": "h1",
-     "caption": "We read every one of your responses, and four themes stood out.",
-     "start": 18.52,
-     "end": 22.68
+     "caption": "Four themes stood out.",
+     "start": 31.916,
+     "end": 33.303
     },
     {
      "id": "h2",
-     "caption": "Privacy and security. Is our information, and our clients' information, safe?",
-     "start": 23.48,
-     "end": 28.77
+     "caption": "One, privacy and security. We're worried about whether our information, and our clients' information, is safe.",
+     "start": 33.803,
+     "end": 40.715
     },
     {
      "id": "h3",
-     "caption": "Accuracy. Can we trust what it tells us?",
-     "start": 29.21,
-     "end": 32.23
+     "caption": "Two, accuracy. We're worried about whether we can trust what it tells us, and whether there's a way to check.",
+     "start": 41.215,
+     "end": 47.081
     },
     {
      "id": "h4",
-     "caption": "Authenticity. Will we lose our human touch?",
-     "start": 33.25,
-     "end": 36.13
+     "caption": "Three, dependence. We're worried we'll lean on it too much and lose our own creativity and ingenuity.",
+     "start": 47.581,
+     "end": 53.661
     },
     {
      "id": "h5",
-     "caption": "And balance. How much should we share with it?",
-     "start": 36.73,
-     "end": 40.54
+     "caption": "And four, balance. We're worried about where AI belongs at Built For The Trades, and where it doesn't, so we keep the human touch and authenticity that matter so much to our brand.",
+     "start": 54.161,
+     "end": 64.892
     }
    ],
    "hold": [
-    40.94,
-    40.94
+    64.892,
+    64.892
    ]
   },
   {
    "id": "idea",
    "phase": 1,
-   "start": 41.24,
-   "end": 56.19,
+   "start": 65.592,
+   "end": 87.064,
    "sentences": [
     {
      "id": "k1",
      "caption": "Here's one idea that makes everything simpler: treat Claude like a brand-new team member.",
-     "start": 41.94,
-     "end": 47.96
+     "start": 66.292,
+     "end": 71.519
     },
     {
      "id": "k2",
-     "caption": "You wouldn't hand a new hire every password on day one. You'd guide them, check their work, and stay in charge.",
-     "start": 48.51,
-     "end": 55.49
+     "caption": "You'd guide them, check their work, and stay in charge. And you'd train them.",
+     "start": 72.019,
+     "end": 75.965
+    },
+    {
+     "id": "k3",
+     "caption": "I'll help train Claude on how we work, and in a future video we'll cover training your own Claude in your own voice and making your process more consistent. More to come.",
+     "start": 76.465,
+     "end": 86.364
     }
    ],
    "hold": [
-    55.89,
-    55.89
+    86.364,
+    86.364
    ]
   },
   {
    "id": "protect",
    "phase": 1,
-   "start": 56.19,
-   "end": 89.12,
+   "start": 87.064,
+   "end": 126.487,
    "sentences": [
     {
      "id": "p1",
-     "caption": "First, protect. Know where your information goes.",
-     "start": 56.89,
-     "end": 60.66
+     "caption": "First, protect. Our clients trust us with their finances, their people, their customers, and their access.",
+     "start": 87.764,
+     "end": 94.271
     },
     {
      "id": "p2",
-     "caption": "On a Team or Enterprise plan, Anthropic doesn't train its models on our conversations by default. On a personal account, a Model Improvement setting controls this, so check it, and stick to our approved work account.",
-     "start": 61.38,
-     "end": 74.27
+     "caption": "Only use our work Claude account. Never a personal account or a free tool. Our work plan doesn't use our conversations to train Anthropic's models by default.",
+     "start": 94.771,
+     "end": 104.84
     },
     {
      "id": "p3",
-     "caption": "Claude reaches the internet only through features that are turned on.",
-     "start": 74.71,
-     "end": 78.18
+     "caption": "Connectors only show Claude what you can already see. So connect only what the job needs, and ask before adding a new one.",
+     "start": 105.34,
+     "end": 112.7
     },
     {
      "id": "p4",
-     "caption": "And connected apps, like Drive or Gmail, only show Claude what you can already see.",
-     "start": 78.57,
-     "end": 83.84
-    },
-    {
-     "id": "p5",
-     "caption": "So connect only what we need, and disconnect anything we stop using.",
-     "start": 84.22,
-     "end": 88.42
+     "caption": "And on recorded calls, tell clients we're recording, and decide before the call, not during, what stays off the record. HR issues, family, health, or anything under NDA? Turn Fathom off.",
+     "start": 113.2,
+     "end": 125.787
     }
    ],
    "hold": [
-    88.82,
-    88.82
+    125.787,
+    125.787
    ]
   },
   {
    "id": "light",
    "phase": 1,
-   "start": 89.12,
-   "end": 121.52,
+   "start": 126.487,
+   "end": 173.193,
    "sentences": [
     {
      "id": "t1",
      "caption": "Then use the traffic light.",
-     "start": 89.82,
-     "end": 91.83
+     "start": 127.187,
+     "end": 128.723
     },
     {
      "id": "t2",
-     "caption": "Red means never share: passwords and logins, API keys, full card or bank numbers, and Social Security or government ID numbers.",
-     "start": 92.38,
-     "end": 102.43
+     "caption": "Red means never put it in Claude: passwords, logins, API keys, bank or card numbers, and Social Security numbers. We keep using our own logins, and clients screen-share instead of signing in for us.",
+     "start": 129.223,
+     "end": 143.089
     },
     {
      "id": "t3",
-     "caption": "Yellow means ask first, and only in approved tools: client details, anything under a confidentiality agreement, and employee, payroll or medical records.",
-     "start": 102.89,
-     "end": 115.07
+     "caption": "Yellow is the work we do every day: financials, employee details, customer names and phone numbers, call transcripts, and personal goals. It's allowed, with rules.",
+     "start": 143.589,
+     "end": 154.128
+    },
+    {
+     "id": "t3b",
+     "caption": "One client at a time. Only the fields the task needs. Swap names and numbers for codes when Claude doesn't need them, and put the real ones back at the end. And a person checks every name and number before it goes out.",
+     "start": 154.628,
+     "end": 168.303
     },
     {
      "id": "t4",
-     "caption": "Green means go ahead: your own drafts, public information, and ideas.",
-     "start": 115.51,
-     "end": 120.82
+     "caption": "Green means go ahead: our own frameworks and anything public.",
+     "start": 168.803,
+     "end": 172.493
     }
    ],
    "hold": [
-    121.22,
-    121.22
+    172.493,
+    172.493
    ]
   },
   {
    "id": "answers",
    "phase": 2,
-   "start": 121.52,
-   "end": 197.63,
+   "start": 173.193,
+   "end": 235.373,
    "sentences": [
     {
      "id": "a0",
      "caption": "Now, your concerns, answered.",
-     "start": 122.22,
-     "end": 125.08
+     "start": 173.893,
+     "end": 175.685
     },
     {
      "id": "a1",
-     "caption": "Accuracy. Claude can sound confident and still be wrong.",
-     "start": 125.66,
-     "end": 130.03
-    },
-    {
-     "id": "a1b",
-     "caption": "It makes what you already know better. It doesn't replace your judgment, so spot-check names, numbers, and claims.",
-     "start": 130.69,
-     "end": 138.65
+     "caption": "One, privacy and security. We just covered it. Work account only, and nothing from the red list.",
+     "start": 176.185,
+     "end": 182.308
     },
     {
      "id": "a2",
-     "caption": "Losing our human touch? Claude drafts, and you decide.",
-     "start": 139.35,
-     "end": 143.65
+     "caption": "Two, accuracy. Yes, there's a way to check.",
+     "start": 182.808,
+     "end": 185.539
     },
     {
      "id": "a2b",
-     "caption": "Our voice and our relationships set us apart. The clearer the guidance and examples you give, the more it sounds like us.",
-     "start": 144.13,
-     "end": 151.11
+     "caption": "Claude can sound confident and still be wrong, so verify what matters: names, numbers, dates, prices, and quotes. Ask where it got something, then check the source yourself. And nothing goes to a client until a person has read it.",
+     "start": 186.039,
+     "end": 200.759
     },
     {
      "id": "a3",
-     "caption": "How much to share? Share the situation, not the sensitive details.",
-     "start": 151.81,
-     "end": 156.77
+     "caption": "Three, dependence. Our clients hire us for lived experience. Claude hasn't run a trades business; we have.",
+     "start": 201.259,
+     "end": 207.872
     },
     {
      "id": "a3b",
-     "caption": "Swap real names for placeholders like Client A, and give plenty of context about the task and the tone.",
-     "start": 157.25,
-     "end": 164.85
+     "caption": "So start with your own thinking, and let Claude help with the blank page and the polish. If you couldn't explain it to a client, don't send it.",
+     "start": 208.372,
+     "end": 216.009
     },
     {
      "id": "a4",
-     "caption": "Like any new hire, Claude does best with structure.",
-     "start": 165.55,
-     "end": 168.8
+     "caption": "And four, balance.",
+     "start": 216.509,
+     "end": 217.683
     },
     {
      "id": "a4b",
-     "caption": "Give it clear guidelines, spot-check its work, and fine-tune over time. Messy processes only get messy faster, so structure first, then test.",
-     "start": 169.27,
-     "end": 179.67
-    },
-    {
-     "id": "a5",
-     "caption": "And data breaches? No tool is risk-free, so we protect in layers.",
-     "start": 180.37,
-     "end": 185.76
-    },
-    {
-     "id": "a5b",
-     "caption": "Approved tools, strong unique passwords with two-step login, the traffic light rules, and speaking up right away if something sensitive is shared by mistake.",
-     "start": 186.16,
-     "end": 196.93
+     "caption": "Claude belongs in the prep and the polish: first drafts, reports, show notes, social posts, and spotting patterns in a spreadsheet. It doesn't belong in the room: the hard conversation with an owner, the personal goal setting, the coaching itself. That stays human.",
+     "start": 218.183,
+     "end": 234.673
     }
    ],
    "hold": [
-    197.33,
-    197.33
+    234.673,
+    234.673
    ]
   },
   {
    "id": "close",
    "phase": 3,
-   "start": 197.63,
-   "end": 226.1,
+   "start": 235.373,
+   "end": 258.683,
    "sentences": [
     {
      "id": "c1",
      "caption": "So here's the view from the summit.",
-     "start": 198.33,
-     "end": 200.57
+     "start": 236.073,
+     "end": 237.972
     },
     {
      "id": "c2",
-     "caption": "Protect what matters. Verify what it gives you. Stay human. And guide Claude like a new team member.",
-     "start": 201.07,
-     "end": 209.43
+     "caption": "Protect what our clients trust us with. Check what Claude gives you. Keep the human touch. And teach Claude how we work, with more to come on that.",
+     "start": 238.472,
+     "end": 246.92
     },
     {
      "id": "c3",
-     "caption": "Claude is here to support your judgment, not replace it. And thank you again for asking honest questions, because that's what makes this team strong.",
-     "start": 209.78,
-     "end": 218.56
+     "caption": "Thank you for being honest about your hesitations.",
+     "start": 247.42,
+     "end": 250.193
     },
     {
      "id": "c4",
-     "caption": "Keep the questions coming, and let's go build something great.",
-     "start": 218.95,
-     "end": 222.1
+     "caption": "Keep the questions coming on Tuesday, and let's go build something great.",
+     "start": 250.693,
+     "end": 254.683
     }
    ],
    "hold": [
-    222.5,
-    222.5
+    254.683,
+    254.683
    ]
   }
  ],
- "duration": 226.1
+ "duration": 258.683
 }
