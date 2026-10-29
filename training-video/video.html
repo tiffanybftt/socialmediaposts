@@ -337,7 +337,7 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
     <img class="a lock" data-cue="c4" data-delay="-.1" data-dur="1.0" data-anim="pop" src="assets/logo-mark-layer.png" style="top:-215px" alt="">
     <img class="a lock" data-cue="c4" data-delay=".5" data-dur="1.1" data-anim="left" src="assets/logo-wordmark-layer.png" style="top:-215px" alt="">
     <div class="a title" data-cue="c4" data-delay=".9" data-anim="up" style="top:520px;font-size:60px">Keep the questions coming.</div>
-    <div class="a fine" data-cue="c4" data-delay="1.4" data-anim="fade" style="top:628px">Narration is an AI-generated voice. Script and visuals created with the help of Claude.</div>
+    <div class="a fine" id="finenote" data-cue="c4" data-delay="1.4" data-anim="fade" style="top:628px"></div>
   </section>
 
   <div id="caption"><div id="captext"></div></div>
@@ -362,6 +362,8 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
   const sent = {};
   TL.scenes.forEach(sc=>sc.sentences.forEach(s=>sent[s.id]=s));
   const total = TL.duration;
+  // the closing note must say whether the voice is AI or a person
+  document.getElementById('finenote').textContent = (TL.voice==='human' ? '' : 'Narration is an AI-generated voice. ') + 'Script and visuals created with the help of Claude.';
 
   // --- scenes and their animated children
   const sceneEls = [...document.querySelectorAll('.scene')].map(el=>{

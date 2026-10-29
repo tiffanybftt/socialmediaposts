@@ -60,8 +60,20 @@ Notes:
 - Re-run `build_audio.py` and `render.js` together. The voice varies slightly run to run, so the timeline changes
   and the visuals must be re-rendered to match.
 - `node tools/snap.js out_dir 12 40 95` saves still frames at those seconds to check layout fast.
-- To swap in a human voice, record each scene against `SCRIPT.md`, then replace `build/narration.wav` and adjust
-  the sentence times in `build/timeline.json`.
+- **Using a human voice.** Record the 11 takes in `RECORDING_SCRIPT.pdf` (Take_1 ... Take_7, with 6a to 6e). Then,
+  instead of `build_audio.py`:
+
+  ```bash
+  python tools/transcribe_takes.py /path/to/takes /path/to/rec   # local speech-to-text with word timings
+  python tools/align_takes.py /path/to/rec                      # finds each script sentence; reports any changes
+  python tools/build_audio_human.py /path/to/rec                # level-matches takes, writes the same build files
+  ```
+
+  Then run `make_music.py`, `render.js` and `mix.sh` as above. `episode/takes.json` says which sentences belong to
+  which take. If you ad-lib, edit that sentence in `episode/script.json` to match what you said so the captions agree.
+  The closing card says "AI-generated voice" only when the voice is AI.
+- **Record quietly.** Keep the input level low enough that the meter never hits red. Clipped takes can't be repaired.
+  Do a 10-second test and listen back before recording the full thing.
 
 ## Turning this into a reusable base
 

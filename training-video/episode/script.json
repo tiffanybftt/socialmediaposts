@@ -12,7 +12,7 @@
       "id": "intro",
       "phase": 0,
       "sentences": [
-        {"id": "i1", "text": "Welcome, team."},
+        {"id": "i1", "text": "Welcome, Built for the Trades team."},
         {"id": "i2", "text": "AI is changing every industry, and fast. It can speed up our work and keep our workflows consistent."},
         {"id": "i3", "text": "But you told us you have real questions about privacy, security, and trust. And that's exactly why we're here."}
       ]
@@ -81,7 +81,7 @@
       "sentences": [
         {"id": "c1", "text": "So here's the view from the summit."},
         {"id": "c2", "text": "Protect what matters. Verify what it gives you. Stay human. And guide Claude like a new team member."},
-        {"id": "c3", "text": "Claude is here to support your judgment, not replace it. And thank you for asking honest questions, because that's what makes this team strong."},
+        {"id": "c3", "text": "Claude is here to support your judgment, not replace it. And thank you again for asking honest questions, because that's what makes this team strong."},
         {"id": "c4", "text": "Keep the questions coming, and let's go build something great."}
       ]
     }

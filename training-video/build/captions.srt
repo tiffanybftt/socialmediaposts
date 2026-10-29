@@ -1,135 +1,135 @@
 1
-00:00:00,700 --> 00:00:01,767
-Welcome, team.
+00:00:00,700 --> 00:00:02,900
+Welcome, Built for the Trades team.
 
 2
-00:00:02,267 --> 00:00:08,688
+00:00:04,340 --> 00:00:10,280
 AI is changing every industry, and fast. It can speed up our work and keep our workflows consistent.
 
 3
-00:00:09,188 --> 00:00:15,780
+00:00:10,900 --> 00:00:17,740
 But you told us you have real questions about privacy, security, and trust. And that's exactly why we're here.
 
 4
-00:00:17,180 --> 00:00:20,551
+00:00:19,140 --> 00:00:23,600
 We read every one of your responses, and four themes stood out.
 
 5
-00:00:21,051 --> 00:00:26,107
+00:00:24,500 --> 00:00:29,320
 Privacy and security. Is our information, and our clients' information, safe?
 
 6
-00:00:26,607 --> 00:00:28,889
+00:00:30,900 --> 00:00:33,540
 Accuracy. Can we trust what it tells us?
 
 7
-00:00:29,389 --> 00:00:31,971
+00:00:34,540 --> 00:00:36,940
 Authenticity. Will we lose our human touch?
 
 8
-00:00:32,471 --> 00:00:34,860
+00:00:38,060 --> 00:00:41,380
 And balance. How much should we share with it?
 
 9
-00:00:36,260 --> 00:00:41,487
+00:00:42,780 --> 00:00:48,760
 Here's one idea that makes everything simpler: treat Claude like a brand-new team member.
 
 10
-00:00:41,987 --> 00:00:48,216
+00:00:49,540 --> 00:00:56,320
 You wouldn't hand a new hire every password on day one. You'd guide them, check their work, and stay in charge.
 
 11
-00:00:49,616 --> 00:00:52,475
+00:00:57,720 --> 00:01:01,660
 First, protect. Know where your information goes.
 
 12
-00:00:52,975 --> 00:01:06,692
+00:01:02,640 --> 00:01:15,280
 On a Team or Enterprise plan, Anthropic doesn't train its models on our conversations by default. On a personal account, a Model Improvement setting controls this, so check it, and stick to our approved work account.
 
 13
-00:01:07,192 --> 00:01:10,883
+00:01:17,120 --> 00:01:20,320
 Claude reaches the internet only through features that are turned on.
 
 14
-00:01:11,383 --> 00:01:16,396
+00:01:21,380 --> 00:01:26,220
 And connected apps, like Drive or Gmail, only show Claude what you can already see.
 
 15
-00:01:16,896 --> 00:01:20,971
+00:01:27,440 --> 00:01:31,540
 So connect only what we need, and disconnect anything we stop using.
 
 16
-00:01:22,371 --> 00:01:23,907
+00:01:32,940 --> 00:01:35,360
 Then use the traffic light.
 
 17
-00:01:24,407 --> 00:01:33,665
+00:01:36,220 --> 00:01:45,720
 Red means never share: passwords and logins, API keys, full card or bank numbers, and Social Security or government ID numbers.
 
 18
-00:01:34,165 --> 00:01:44,384
+00:01:47,080 --> 00:01:58,920
 Yellow means ask first, and only in approved tools: client details, anything under a confidentiality agreement, and employee, payroll or medical records.
 
 19
-00:01:44,884 --> 00:01:49,172
+00:02:00,060 --> 00:02:05,660
 Green means go ahead: your own drafts, public information, and ideas.
 
 20
-00:01:50,572 --> 00:01:52,364
+00:02:07,060 --> 00:02:10,180
 Now, your concerns, answered.
 
 21
-00:01:52,864 --> 00:01:56,128
+00:02:11,040 --> 00:02:15,600
 Accuracy. Claude can sound confident and still be wrong.
 
 22
-00:01:56,628 --> 00:02:03,156
+00:02:16,500 --> 00:02:24,260
 It makes what you already know better. It doesn't replace your judgment, so spot-check names, numbers, and claims.
 
 23
-00:02:03,656 --> 00:02:06,963
+00:02:25,110 --> 00:02:29,250
 Losing our human touch? Claude drafts, and you decide.
 
 24
-00:02:07,463 --> 00:02:14,588
+00:02:30,250 --> 00:02:36,950
 Our voice and our relationships set us apart. The clearer the guidance and examples you give, the more it sounds like us.
 
 25
-00:02:15,088 --> 00:02:19,248
+00:02:37,800 --> 00:02:43,000
 How much to share? Share the situation, not the sensitive details.
 
 26
-00:02:19,748 --> 00:02:26,255
+00:02:44,140 --> 00:02:51,280
 Swap real names for placeholders like Client A, and give plenty of context about the task and the tone.
 
 27
-00:02:26,755 --> 00:02:29,592
+00:02:52,130 --> 00:02:55,670
 Like any new hire, Claude does best with structure.
 
 28
-00:02:30,092 --> 00:02:39,436
+00:02:56,690 --> 00:03:06,950
 Give it clear guidelines, spot-check its work, and fine-tune over time. Messy processes only get messy faster, so structure first, then test.
 
 29
-00:02:39,936 --> 00:02:44,139
+00:03:07,800 --> 00:03:13,100
 And data breaches? No tool is risk-free, so we protect in layers.
 
 30
-00:02:44,639 --> 00:02:54,303
+00:03:14,540 --> 00:03:24,840
 Approved tools, strong unique passwords with two-step login, the traffic light rules, and speaking up right away if something sensitive is shared by mistake.
 
 31
-00:02:55,703 --> 00:02:57,601
+00:03:26,240 --> 00:03:28,520
 So here's the view from the summit.
 
 32
-00:02:58,101 --> 00:03:04,267
+00:03:30,060 --> 00:03:38,040
 Protect what matters. Verify what it gives you. Stay human. And guide Claude like a new team member.
 
 33
-00:03:04,767 --> 00:03:13,087
-Claude is here to support your judgment, not replace it. And thank you for asking honest questions, because that's what makes this team strong.
+00:03:39,400 --> 00:03:47,780
+Claude is here to support your judgment, not replace it. And thank you again for asking honest questions, because that's what makes this team strong.
 
 34
-00:03:13,587 --> 00:03:16,936
+00:03:48,560 --> 00:03:51,740
 Keep the questions coming, and let's go build something great.

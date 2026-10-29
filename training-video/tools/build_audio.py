@@ -55,7 +55,7 @@ def add(chunk: np.ndarray) -> None:
     t += len(chunk) / rate
 
 
-timeline = {"title": script["title"], "subtitle": script["subtitle"], "scenes": []}
+timeline = {"title": script["title"], "subtitle": script["subtitle"], "voice": "ai", "scenes": []}
 for scene in script["scenes"]:
     start = t
     add(silence(script["scene_lead_in"]))
