@@ -3,3 +3,5 @@ build/segments/
 build/video_silent.mp4
 build/test.mp4
 voice-samples/*.wav
+build/music-preview-*.mp3
+build/recording_script.html

@@ -22,8 +22,12 @@ asr = json.loads((rec / "asr.json").read_text())
 sentences = {s["id"]: s for sc in script["scenes"] for s in sc["sentences"]}
 
 
+SPOKEN_NUMBERS = {"1": "one", "2": "two", "3": "three", "4": "four", "5": "five"}
+
+
 def norm(word: str) -> str:
-    return re.sub(r"[^a-z0-9']", "", word.lower().replace("’", "'"))
+    w = re.sub(r"[^a-z0-9']", "", word.lower().replace("’", "'"))
+    return SPOKEN_NUMBERS.get(w, w)  # the transcriber writes "4." for "four"
 
 
 def tokens(text: str) -> list[str]:

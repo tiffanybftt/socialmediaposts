@@ -3,6 +3,7 @@
 usage: python make_music.py <duration_seconds> [calm|upbeat] [timeline.json]   ->  build/music.wav (44.1 kHz stereo)
 
 calm:   soft pad and gentle plucks at 76 BPM
+neosoul: 88 BPM laid-back groove: deep round bass, light drums (snare a touch behind the beat), warm electric piano chords
 upbeat: 108 BPM groove (kick, clap, hats, bass, plucks) that follows the video: whooshes at scene changes, a
         riser and crash on the closing logo reveal, then a chord that rings out. Needs the timeline to find them.
 """
@@ -50,12 +51,15 @@ def add(out, sig, start, pan=0.0, gain=1.0):
     out[1, i : i + len(sig)] += sig * gain * (1 + pan) / 2 * 2 ** 0.5 / 1.4
 
 
-def reverb(out, seconds=1.6, decay=3.2):
+def reverb(out, seconds=1.6, decay=3.2, dark=0.0):
     ir_len = int(seconds * SR)
     tail = np.exp(-np.arange(ir_len) / SR * decay)
     wet = np.zeros_like(out)
     for ch in range(2):
         ir = rng.standard_normal(ir_len) * tail
+        if dark:  # one-pole low-pass makes the room warmer
+            for i in range(1, ir_len):
+                ir[i] = (1 - dark) * ir[i] + dark * ir[i - 1]
         size = 1 << int(np.ceil(np.log2(n + ir_len)))
         conv = np.fft.irfft(np.fft.rfft(out[ch], size) * np.fft.rfft(ir, size), size)[:n]
         wet[ch] = conv / (np.abs(conv).max() + 1e-9) * np.abs(out[ch]).max()
@@ -204,4 +208,143 @@ def upbeat():
     finish(mix, fade_in=1.0, fade_out=3.5)
 
 
-{"calm": calm, "upbeat": upbeat}[style]()
+def neosoul():
+    """Laid-back neo-soul: round bass, light drums behind the beat, warm electric piano with lush chords."""
+    BPM = 88
+    BEAT = 60 / BPM
+    SIX = BEAT / 4  # one sixteenth note
+    BAR = 4 * BEAT
+
+    scenes = {sc["id"]: sc for sc in timeline["scenes"]} if timeline else {}
+    logo_t = next((x["start"] for x in scenes.get("close", {"sentences": []})["sentences"] if x["id"] == "c4"), duration - 8.0)
+    scene_starts = [sc["start"] for sc in timeline["scenes"]][1:] if timeline else []
+
+    L = int(logo_t // BAR)  # bar lines line up with the closing logo reveal
+    g0 = logo_t - L * BAR
+    kL = 4 * L
+    tb = lambda k: g0 + k * BEAT
+
+    # bass root (midi), comping notes (a 3rd, 5th, 7th and 9th voicing), bass 5th
+    CH = {
+        "Dmaj9": (38, (66, 69, 73, 76)), "Bm9": (35, (62, 66, 69, 73)), "Em9": (40, (67, 71, 74, 78)), "A13": (33, (61, 67, 71, 76)),
+        "Gmaj9": (43, (59, 62, 66, 69)), "F#m7": (42, (57, 61, 64, 68)),
+    }
+    FORM = ["Dmaj9", "Bm9", "Em9", "A13", "Gmaj9", "F#m7", "Em9", "A13"]  # I vi ii V, IV iii ii V
+    # ending, in beats after the logo bar starts: the last chord lands as late as it can while still ringing for ~3 s
+    remaining = duration - logo_t
+    FINAL_B = next((b for b in (8, 6, 4) if remaining - b * BEAT >= 2.9), 4)
+    END = {8: [(0, 4, "Dmaj9"), (4, 2, "Em9"), (6, 2, "A13")], 6: [(0, 4, "Dmaj9"), (4, 2, "A13")], 4: [(0, 2, "Em9"), (2, 2, "A13")]}[FINAL_B]
+    END = END + [(FINAL_B, None, "Dmaj9")]
+
+    def band_noise(seconds, lo, hi):
+        length = int(seconds * SR)
+        spec = np.fft.rfft(rng.standard_normal(length))
+        f = np.fft.rfftfreq(length, 1 / SR)
+        spec[(f < lo) | (f > hi)] = 0
+        x = np.fft.irfft(spec, length)
+        return x / np.abs(x).max()
+
+    snare_noise, hat_noise, crash_noise = band_noise(0.3, 1500, 6500), band_noise(0.3, 6500, 14000), band_noise(3.0, 3000, 16000)
+
+    def keys(midi, seconds, gain):
+        """Warm electric piano: a soft FM tine, two slightly detuned voices, a gentle tremolo."""
+        tt = np.arange(int(seconds * SR)) / SR
+        sig = 0
+        for det in (-0.0035, 0.0035):
+            f = hz(midi) * (1 + det)
+            index = 1.4 * np.exp(-tt / 0.14) + 0.18
+            sig = sig + np.sin(2 * np.pi * f * tt + index * np.sin(2 * np.pi * f * tt))
+        sig = sig * np.exp(-tt / 1.1) * (1 + 0.1 * np.sin(2 * np.pi * 4.6 * tt))
+        a, r = int(0.006 * SR), min(int(0.1 * SR), len(sig) // 2)
+        sig[:a] *= np.linspace(0, 1, a)
+        sig[-r:] *= np.linspace(1, 0, r)
+        return sig * gain
+
+    def bass(midi, seconds, gain):
+        """Round electric bass: strong low harmonics so it still reads on laptop speakers."""
+        f = hz(midi)
+        tt = np.arange(int(seconds * SR)) / SR
+        sig = (np.sin(2 * np.pi * f * tt) + 0.8 * np.sin(4 * np.pi * f * tt) + 0.45 * np.sin(6 * np.pi * f * tt)) * np.exp(-tt / 0.7)
+        a, r = int(0.012 * SR), min(int(0.08 * SR), len(sig) // 2)
+        sig[:a] *= np.linspace(0, 1, a)
+        sig[-r:] *= np.linspace(1, 0, r)
+        return sig * gain
+
+    def kick():
+        tt = np.arange(int(0.3 * SR)) / SR
+        return np.sin(2 * np.pi * np.cumsum(50 + 75 * np.exp(-tt / 0.03)) / SR) * np.exp(-tt / 0.13)
+
+    def snare(vel):
+        tt = np.arange(int(0.25 * SR)) / SR
+        body = np.sin(2 * np.pi * 190 * tt) * np.exp(-tt / 0.045)
+        return (body * 0.7 + snare_noise[: len(tt)] * np.exp(-tt / 0.06) * 0.55 + np.sin(2 * np.pi * 1800 * tt) * np.exp(-tt / 0.008) * 0.3) * vel
+
+    def hat(open_=False):
+        tt = np.arange(int(0.3 * SR)) / SR
+        return hat_noise[: len(tt)] * np.exp(-tt / (0.12 if open_ else 0.02))
+
+    jitter = lambda: float(rng.uniform(-0.006, 0.006))  # small, deterministic human timing
+
+    # groove for each bar: (sixteenth position, length in sixteenths) for the bass; kick positions; keys hits
+    BASS = [[(0, 6), (6, 2), (10, 3), (14, 2)], [(0, 5), (7, 2), (11, 2), (14, 2)]]
+    KICKS = [(0, 6, 10), (0, 7, 11)]
+    KEYS = [[(0, 6), (7, 3), (12, 4)], [(2, 5), (8, 4), (14, 2)]]
+
+    segs = [(k, 4, FORM[((k // 4) - L) % 8], ((k // 4) - L) % 8) for k in range(-4, kL, 4)]
+    segs += [(kL + b, ln, ch, None) for b, ln, ch in END]
+
+    dry, wet = np.zeros((2, n)), np.zeros((2, n))
+    for i, (k, ln, name, idx) in enumerate(segs):
+        root, voicing = CH[name]
+        nxt = CH[segs[i + 1][2]][0] if i + 1 < len(segs) else root
+        approach = nxt + (2 if root > nxt else -1)
+        if ln is None:  # final chord: it just rings out
+            add(dry, bass(root, 3.5, 0.17), tb(k))
+            for j, m in enumerate(voicing):
+                add(wet, keys(m, 4.6, 0.1), tb(k) + 0.014 * j)
+            add(dry, kick(), tb(k), gain=0.3)
+            add(wet, crash_noise[: int(2.2 * SR)] * np.exp(-np.arange(int(2.2 * SR)) / SR / 0.8), tb(k), gain=0.12)
+            for j, m in enumerate((78, 81, 85, 88)):
+                add(wet, keys(m, 2.4, 0.05), tb(k) + 0.11 * j, pan=-0.4 + 0.27 * j)
+            continue
+        pat = (idx if idx is not None else 0) % 2
+        lowest = tb(k)
+        if ln == 4:
+            for pos, length in BASS[pat]:
+                m = approach if pos == 14 else (root + 7 if pos == 10 else (root + 12 if pos == 7 else root))
+                add(dry, bass(m, length * SIX * 0.95, 0.17), lowest + pos * SIX + jitter())
+            for pos, length in KEYS[pat]:
+                for j, m in enumerate(voicing):
+                    add(wet, keys(m, length * SIX, 0.1), lowest + pos * SIX + 0.012 * j + jitter())
+        else:  # two-beat ending chords
+            add(dry, bass(root, 1.4 * BEAT, 0.17), lowest)
+            add(dry, bass(approach, 0.5 * BEAT, 0.16), lowest + 1.5 * BEAT)
+            for j, m in enumerate(voicing):
+                add(wet, keys(m, 1.8 * BEAT, 0.1), lowest + 0.012 * j)
+        if k >= 8 and k < kL + FINAL_B and ln == 4:  # light drums: soft kick, rim on 2 and 4 a touch late, ghost notes, loose hats
+            for pos in KICKS[pat]:
+                add(dry, kick(), lowest + pos * SIX + jitter(), gain=0.3)
+            for pos, vel in ((4, 0.3), (12, 0.3), (9, 0.07), (15, 0.08)):
+                add(wet, snare(vel), lowest + pos * SIX + (0.022 if vel > 0.2 else 0.012) + jitter(), pan=0.1)
+            for pos in range(16):
+                swing = 0.12 * SIX if pos % 2 else 0.0  # the off-sixteenths lean back a little
+                gain = (0.07 if pos % 4 == 0 else 0.045 if pos % 2 == 0 else 0.025)
+                add(wet, hat(open_=(pos == 14 and pat == 0)), lowest + pos * SIX + swing + jitter(), pan=-0.3, gain=gain)
+
+    for sct in scene_starts:  # a soft keys note as each scene changes
+        add(wet, keys(81, 1.6, 0.05), sct - 0.3, pan=0.2)
+
+    sw = int(1.2 * SR)  # logo reveal: a soft cymbal swell into a crash
+    add(wet, band_noise(1.2, 3000, 14000) * (np.arange(sw) / sw) ** 2.2, logo_t - 1.2, gain=0.1)
+    add(wet, crash_noise[: int(2.0 * SR)] * np.exp(-np.arange(int(2.0 * SR)) / SR / 0.7), logo_t, gain=0.12)
+
+    mix = dry + wet * 0.8 + reverb(wet, 1.8, 3.0, dark=0.6) * 0.5
+    spec = np.fft.rfft(mix, axis=1)  # warm it up: roll off the top end
+    f = np.fft.rfftfreq(n, 1 / SR)
+    spec *= (1 / (1 + (f / 9000) ** 4))[None, :]
+    mix = np.fft.irfft(spec, n, axis=1)
+    print(f"neo-soul {BPM} BPM, bar lines aligned to the logo reveal at {logo_t:.1f}s, final chord at {tb(kL + FINAL_B):.1f}s")
+    finish(mix, fade_in=1.5, fade_out=2.5)
+
+
+{"calm": calm, "upbeat": upbeat, "neosoul": neosoul}[style]()

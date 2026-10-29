@@ -16,7 +16,7 @@
         {"id": "i2", "text": "Welcome to this week's AI Training Video."},
         {"id": "i3", "text": "Thank you for answering the question, \"What's one thing about using AI that makes you hesitant?\""},
         {"id": "i4", "text": "You all had a lot of great responses."},
-        {"id": "i5", "text": "Your worries are reasonable and you're not alone in having them."},
+        {"id": "i5", "text": "Your worries are totally reasonable and you're not alone in having them."},
         {"id": "i6", "text": "I'd like to address your hesitations in this video to give you peace of mind while navigating Claude."},
         {"id": "i7", "text": "I'll be straight with you about what's solid and what's still a risk, and we'll take it one step at a time."}
       ]
@@ -29,7 +29,7 @@
         {"id": "h2", "text": "One, privacy and security. We're worried about whether our information, and our clients' information, is safe."},
         {"id": "h3", "text": "Two, accuracy. We're worried about whether we can trust what it tells us, and whether there's a way to check."},
         {"id": "h4", "text": "Three, dependence. We're worried we'll lean on it too much and lose our own creativity and ingenuity."},
-        {"id": "h5", "text": "And four, balance. We're worried about where AI belongs at Built For The Trades, and where it doesn't, so we keep the human touch and authenticity that matter so much to our brand."}
+        {"id": "h5", "text": "And four, balance. We're worried about where AI belongs at Built For The Trades, and where it doesn't, so we keep the human touch and authenticity that matters so much to our brand."}
       ]
     },
     {
@@ -47,8 +47,8 @@
       "sentences": [
         {"id": "p1", "text": "First, protect. Our clients trust us with their finances, their people, their customers, and their access."},
         {"id": "p2", "text": "Only use our work Claude account. Never a personal account or a free tool. Our work plan doesn't use our conversations to train Anthropic's models by default."},
-        {"id": "p3", "text": "Connectors only show Claude what you can already see. So connect only what the job needs, and ask before adding a new one."},
-        {"id": "p4", "text": "And on recorded calls, tell clients we're recording, and decide before the call, not during, what stays off the record. HR issues, family, health, or anything under NDA? Turn Fathom off."}
+        {"id": "p3", "text": "Connectors only show Claude what we can already see. So connect only what the job needs, and ask before adding a new one."},
+        {"id": "p4", "text": "And on recorded calls, tell clients we're recording, and decide before the call, not during, what stays off the record. HR issues, family, health, or anything under the NDA? Turn Fathom off."}
       ]
     },
     {
@@ -56,7 +56,7 @@
       "phase": 1,
       "sentences": [
         {"id": "t1", "text": "Then use the traffic light."},
-        {"id": "t2", "text": "Red means never put it in Claude: passwords, logins, API keys, bank or card numbers, and Social Security numbers. We keep using our own logins, and clients screen-share instead of signing in for us."},
+        {"id": "t2", "text": "Red means never put into Claude: passwords, logins, API keys, bank or card numbers, and Social Security numbers. We keep using our own logins, and clients screen-share instead of signing in for us."},
         {"id": "t3", "text": "Yellow is the work we do every day: financials, employee details, customer names and phone numbers, call transcripts, and personal goals. It's allowed, with rules."},
         {"id": "t3b", "text": "One client at a time. Only the fields the task needs. Swap names and numbers for codes when Claude doesn't need them, and put the real ones back at the end. And a person checks every name and number before it goes out."},
         {"id": "t4", "text": "Green means go ahead: our own frameworks and anything public."}
@@ -70,10 +70,10 @@
         {"id": "a1", "text": "One, privacy and security. We just covered it. Work account only, and nothing from the red list."},
         {"id": "a2", "text": "Two, accuracy. Yes, there's a way to check."},
         {"id": "a2b", "text": "Claude can sound confident and still be wrong, so verify what matters: names, numbers, dates, prices, and quotes. Ask where it got something, then check the source yourself. And nothing goes to a client until a person has read it."},
-        {"id": "a3", "text": "Three, dependence. Our clients hire us for lived experience. Claude hasn't run a trades business; we have."},
+        {"id": "a3", "text": "Three, dependence. Our clients hired us for lived experience. Claude hasn't run a trades business; we have."},
         {"id": "a3b", "text": "So start with your own thinking, and let Claude help with the blank page and the polish. If you couldn't explain it to a client, don't send it."},
         {"id": "a4", "text": "And four, balance."},
-        {"id": "a4b", "text": "Claude belongs in the prep and the polish: first drafts, reports, show notes, social posts, and spotting patterns in a spreadsheet. It doesn't belong in the room: the hard conversation with an owner, the personal goal setting, the coaching itself. That stays human."}
+        {"id": "a4b", "text": "Claude belongs in the prep and the polish: first drafts, reports, show notes, social posts, and spotting patterns in a spreadsheet. It doesn't belong in the room: the hard conversation with an owner, the personal goal setting, and the coaching itself. That stays human."}
       ]
     },
     {
@@ -83,7 +83,7 @@
       "sentences": [
         {"id": "c1", "text": "So here's the view from the summit."},
         {"id": "c2", "text": "Protect what our clients trust us with. Check what Claude gives you. Keep the human touch. And teach Claude how we work, with more to come on that."},
-        {"id": "c3", "text": "Thank you for being honest about your hesitations."},
+        {"id": "c3", "text": "Thank you for being honest about your hesitations with me."},
         {"id": "c4", "text": "Keep the questions coming on Tuesday, and let's go build something great."}
       ]
     }

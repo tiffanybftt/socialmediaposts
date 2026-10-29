@@ -1,143 +1,143 @@
 1
-00:00:00,700 --> 00:00:03,132
+00:00:00,700 --> 00:00:02,800
 Hey Built For The Trades Team, it's Tiffany.
 
 2
-00:00:03,632 --> 00:00:06,000
+00:00:02,770 --> 00:00:05,340
 Welcome to this week's AI Training Video.
 
 3
-00:00:06,500 --> 00:00:11,897
+00:00:06,020 --> 00:00:10,070
 Thank you for answering the question, "What's one thing about using AI that makes you hesitant?"
 
 4
-00:00:12,397 --> 00:00:14,445
+00:00:10,770 --> 00:00:12,430
 You all had a lot of great responses.
 
 5
-00:00:14,945 --> 00:00:18,252
-Your worries are reasonable and you're not alone in having them.
+00:00:12,460 --> 00:00:15,900
+Your worries are totally reasonable and you're not alone in having them.
 
 6
-00:00:18,752 --> 00:00:24,661
+00:00:16,410 --> 00:00:20,650
 I'd like to address your hesitations in this video to give you peace of mind while navigating Claude.
 
 7
-00:00:25,161 --> 00:00:30,516
+00:00:21,430 --> 00:00:25,910
 I'll be straight with you about what's solid and what's still a risk, and we'll take it one step at a time.
 
 8
-00:00:31,916 --> 00:00:33,303
+00:00:27,267 --> 00:00:29,297
 Four themes stood out.
 
 9
-00:00:33,803 --> 00:00:40,715
+00:00:29,557 --> 00:00:35,337
 One, privacy and security. We're worried about whether our information, and our clients' information, is safe.
 
 10
-00:00:41,215 --> 00:00:47,081
+00:00:35,467 --> 00:00:41,057
 Two, accuracy. We're worried about whether we can trust what it tells us, and whether there's a way to check.
 
 11
-00:00:47,581 --> 00:00:53,661
+00:00:41,907 --> 00:00:47,827
 Three, dependence. We're worried we'll lean on it too much and lose our own creativity and ingenuity.
 
 12
-00:00:54,161 --> 00:01:04,892
-And four, balance. We're worried about where AI belongs at Built For The Trades, and where it doesn't, so we keep the human touch and authenticity that matter so much to our brand.
+00:00:48,167 --> 00:00:58,497
+And four, balance. We're worried about where AI belongs at Built For The Trades, and where it doesn't, so we keep the human touch and authenticity that matters so much to our brand.
 
 13
-00:01:06,292 --> 00:01:11,519
+00:00:59,897 --> 00:01:05,137
 Here's one idea that makes everything simpler: treat Claude like a brand-new team member.
 
 14
-00:01:12,019 --> 00:01:15,965
+00:01:05,727 --> 00:01:09,807
 You'd guide them, check their work, and stay in charge. And you'd train them.
 
 15
-00:01:16,465 --> 00:01:26,364
+00:01:10,187 --> 00:01:20,477
 I'll help train Claude on how we work, and in a future video we'll cover training your own Claude in your own voice and making your process more consistent. More to come.
 
 16
-00:01:27,764 --> 00:01:34,271
+00:01:21,877 --> 00:01:28,447
 First, protect. Our clients trust us with their finances, their people, their customers, and their access.
 
 17
-00:01:34,771 --> 00:01:44,840
+00:01:28,887 --> 00:01:39,407
 Only use our work Claude account. Never a personal account or a free tool. Our work plan doesn't use our conversations to train Anthropic's models by default.
 
 18
-00:01:45,340 --> 00:01:52,700
-Connectors only show Claude what you can already see. So connect only what the job needs, and ask before adding a new one.
+00:01:39,897 --> 00:01:47,187
+Connectors only show Claude what we can already see. So connect only what the job needs, and ask before adding a new one.
 
 19
-00:01:53,200 --> 00:02:05,787
-And on recorded calls, tell clients we're recording, and decide before the call, not during, what stays off the record. HR issues, family, health, or anything under NDA? Turn Fathom off.
+00:01:47,177 --> 00:01:59,527
+And on recorded calls, tell clients we're recording, and decide before the call, not during, what stays off the record. HR issues, family, health, or anything under the NDA? Turn Fathom off.
 
 20
-00:02:07,187 --> 00:02:08,723
+00:02:00,927 --> 00:02:02,897
 Then use the traffic light.
 
 21
-00:02:09,223 --> 00:02:23,089
-Red means never put it in Claude: passwords, logins, API keys, bank or card numbers, and Social Security numbers. We keep using our own logins, and clients screen-share instead of signing in for us.
+00:02:03,467 --> 00:02:17,167
+Red means never put into Claude: passwords, logins, API keys, bank or card numbers, and Social Security numbers. We keep using our own logins, and clients screen-share instead of signing in for us.
 
 22
-00:02:23,589 --> 00:02:34,128
+00:02:17,867 --> 00:02:28,537
 Yellow is the work we do every day: financials, employee details, customer names and phone numbers, call transcripts, and personal goals. It's allowed, with rules.
 
 23
-00:02:34,628 --> 00:02:48,303
+00:02:28,987 --> 00:02:43,887
 One client at a time. Only the fields the task needs. Swap names and numbers for codes when Claude doesn't need them, and put the real ones back at the end. And a person checks every name and number before it goes out.
 
 24
-00:02:48,803 --> 00:02:52,493
+00:02:44,527 --> 00:02:48,907
 Green means go ahead: our own frameworks and anything public.
 
 25
-00:02:53,893 --> 00:02:55,685
+00:02:50,307 --> 00:02:52,427
 Now, your concerns, answered.
 
 26
-00:02:56,185 --> 00:03:02,308
+00:02:53,077 --> 00:02:58,927
 One, privacy and security. We just covered it. Work account only, and nothing from the red list.
 
 27
-00:03:02,808 --> 00:03:05,539
+00:02:58,927 --> 00:03:02,977
 Two, accuracy. Yes, there's a way to check.
 
 28
-00:03:06,039 --> 00:03:20,759
+00:03:03,577 --> 00:03:18,807
 Claude can sound confident and still be wrong, so verify what matters: names, numbers, dates, prices, and quotes. Ask where it got something, then check the source yourself. And nothing goes to a client until a person has read it.
 
 29
-00:03:21,259 --> 00:03:27,872
-Three, dependence. Our clients hire us for lived experience. Claude hasn't run a trades business; we have.
+00:03:19,507 --> 00:03:27,517
+Three, dependence. Our clients hired us for lived experience. Claude hasn't run a trades business; we have.
 
 30
-00:03:28,372 --> 00:03:36,009
+00:03:28,277 --> 00:03:35,327
 So start with your own thinking, and let Claude help with the blank page and the polish. If you couldn't explain it to a client, don't send it.
 
 31
-00:03:36,509 --> 00:03:37,683
+00:03:36,027 --> 00:03:37,697
 And four, balance.
 
 32
-00:03:38,183 --> 00:03:54,673
-Claude belongs in the prep and the polish: first drafts, reports, show notes, social posts, and spotting patterns in a spreadsheet. It doesn't belong in the room: the hard conversation with an owner, the personal goal setting, the coaching itself. That stays human.
+00:03:37,947 --> 00:03:55,037
+Claude belongs in the prep and the polish: first drafts, reports, show notes, social posts, and spotting patterns in a spreadsheet. It doesn't belong in the room: the hard conversation with an owner, the personal goal setting, and the coaching itself. That stays human.
 
 33
-00:03:56,073 --> 00:03:57,972
+00:03:56,437 --> 00:03:58,397
 So here's the view from the summit.
 
 34
-00:03:58,472 --> 00:04:06,920
+00:03:58,807 --> 00:04:07,387
 Protect what our clients trust us with. Check what Claude gives you. Keep the human touch. And teach Claude how we work, with more to come on that.
 
 35
-00:04:07,420 --> 00:04:10,193
-Thank you for being honest about your hesitations.
+00:04:08,017 --> 00:04:10,437
+Thank you for being honest about your hesitations with me.
 
 36
-00:04:10,693 --> 00:04:14,683
+00:04:11,007 --> 00:04:14,087
 Keep the questions coming on Tuesday, and let's go build something great.
