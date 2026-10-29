@@ -2,3 +2,4 @@ build/*.wav
 build/segments/
 build/video_silent.mp4
 build/test.mp4
+voice-samples/*.wav

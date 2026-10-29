@@ -11,22 +11,34 @@ import wave
 from pathlib import Path
 
 import numpy as np
-from piper import PiperVoice, SynthesisConfig
 
 ROOT = Path(__file__).resolve().parent.parent
 BUILD = ROOT / "build"
 BUILD.mkdir(exist_ok=True)
 
-voice_dir = Path(sys.argv[1])  # folder holding the .onnx voice files
+voice_dir = Path(sys.argv[1])  # folder holding the voice model files
 script = json.loads((ROOT / "episode" / "script.json").read_text())
-voice = PiperVoice.load(voice_dir / f"{script['voice']}.onnx")
-cfg = SynthesisConfig(length_scale=script["length_scale"])
-rate = voice.config.sample_rate
+engine = script.get("engine", "piper")
 
+if engine == "kokoro":  # more natural; "voice" is a Kokoro voice name such as af_heart
+    from kokoro_onnx import Kokoro
 
-def speak(text: str) -> np.ndarray:
-    parts = [np.frombuffer(c.audio_int16_bytes, dtype=np.int16) for c in voice.synthesize(text, cfg)]
-    return np.concatenate(parts)
+    kokoro = Kokoro(str(voice_dir / "kokoro-v1.0.onnx"), str(voice_dir / "voices-v1.0.bin"))
+    rate = 24000
+
+    def speak(text: str) -> np.ndarray:
+        audio, _ = kokoro.create(text, voice=script["voice"], speed=script.get("speed", 1.0), lang="en-us")
+        return (np.clip(audio, -1, 1) * 32767).astype(np.int16)
+else:
+    from piper import PiperVoice, SynthesisConfig
+
+    voice = PiperVoice.load(voice_dir / f"{script['voice']}.onnx")
+    cfg = SynthesisConfig(length_scale=script["length_scale"])
+    rate = voice.config.sample_rate
+
+    def speak(text: str) -> np.ndarray:
+        parts = [np.frombuffer(c.audio_int16_bytes, dtype=np.int16) for c in voice.synthesize(text, cfg)]
+        return np.concatenate(parts)
 
 
 def silence(seconds: float) -> np.ndarray:
