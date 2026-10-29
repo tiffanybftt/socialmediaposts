@@ -20,10 +20,10 @@ rec.mkdir(parents=True, exist_ok=True)
 
 wanted = list(json.loads((Path(__file__).resolve().parent.parent / "episode" / "takes.json").read_text()))
 files = {}
-for f in sorted(src.glob("*Take_*.m4a"), key=lambda p: p.stat().st_mtime):  # the newest upload of a take wins
-    take = re.search(r"Take_([0-9a-z]+)\.m4a$", f.name).group(1)
-    if take in wanted:
-        files[take] = f
+for f in sorted(src.glob("*Take_*.m4a"), key=lambda p: p.stat().st_mtime):  # the newest upload of a take wins (oldest first)
+    found = re.search(r"Take_(\d+[a-z]?)(?:_\d+)?\.m4a$", f.name)  # "Take_1_1" is a re-upload of Take 1
+    if found and found.group(1) in wanted:
+        files[found.group(1)] = f
 missing = [t for t in wanted if t not in files]
 if missing:
     print("WARNING: no recording found for take(s):", ", ".join(missing))

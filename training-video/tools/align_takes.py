@@ -105,6 +105,9 @@ def snap_end(db, thr, t1, next_start):
 
 result, problems = {}, []
 for take, ids in takes.items():
+    if take not in asr:
+        print(f"  take {take}: not recorded yet, skipping")
+        continue
     db, thr_on, thr = loudness_track(rec / f"take_{take}.wav")
     words = asr[take]["words"]
     asr_tok = [norm(w["w"]) for w in words]
