@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Using Claude With Confidence - AI Summit Group training</title>
+<style>
+@font-face{font-family:"Montserrat";font-weight:500;src:url(assets/fonts/montserrat-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Montserrat";font-weight:600;src:url(assets/fonts/montserrat-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Montserrat";font-weight:700;src:url(assets/fonts/montserrat-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Montserrat";font-weight:800;src:url(assets/fonts/montserrat-latin-800-normal.woff2) format("woff2")}
+
+/* ---- brand tokens: change these to restyle every episode ---- */
+:root{
+  --bg:#FAF8F5; --orange:#F26A1B; --orange-d:#DD5408; --peach:#FFE9DB; --peach2:#FBD3B8;
+  --ink:#232220; --muted:#6B655E; --line:#ECE5DB; --card:#FFFFFF;
+  --red:#DE4A3C; --amber:#F2A71B; --green:#32A468;
+  --red-t:#FCE9E6; --amber-t:#FEF3DC; --green-t:#E3F5EB;
+  --font:"Montserrat","Inter",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:var(--bg);overflow:hidden}
+body{font-family:var(--font);color:var(--ink)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--bg);overflow:hidden}
+.a{opacity:0;will-change:transform,opacity}
+.abs{position:absolute}
+svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block}
+
+/* background ridges */
+#bg{position:absolute;left:0;bottom:0;width:1920px;height:340px;overflow:hidden}
+#bg svg{position:absolute;left:0;bottom:0;width:3840px;height:340px}
+
+/* persistent chrome */
+#brand{position:absolute;left:64px;top:38px;display:flex;align-items:center;gap:16px;opacity:0}
+#brand img{height:58px;display:block}
+#brand b{font-weight:800;font-size:25px;letter-spacing:.04em}
+#tag{position:absolute;right:64px;top:52px;font-weight:700;font-size:16px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;opacity:0}
+#caption{position:absolute;left:150px;right:150px;bottom:128px;display:flex;justify-content:center;opacity:0}
+#captext{background:rgba(255,255,255,.94);border:1.5px solid var(--line);border-radius:26px;padding:20px 40px;font-weight:600;font-size:35px;line-height:1.38;text-align:center;box-shadow:0 12px 36px rgba(70,40,10,.10);max-width:1620px}
+#trail{position:absolute;left:0;top:1004px;width:1920px;height:60px;opacity:0}
+#trail .line{position:absolute;left:480px;top:20px;width:960px;height:4px;background:var(--line);border-radius:2px}
+#trail .fill{position:absolute;left:480px;top:20px;width:0;height:4px;background:var(--orange);border-radius:2px}
+#trail .n{position:absolute;top:10px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:#fff;border:4px solid #D9D1C6}
+#trail .n.on{border-color:var(--orange)}
+#trail .n.done{background:var(--orange);border-color:var(--orange)}
+#trail .lab{position:absolute;top:36px;width:200px;margin-left:-100px;text-align:center;font-weight:700;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#A39B90}
+#trail .lab.on{color:var(--orange)}
+
+.scene{position:absolute;inset:0;display:none}
+
+/* type */
+.eyebrow{position:absolute;left:120px;top:128px;font-weight:700;font-size:24px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange)}
+.h1{position:absolute;left:120px;top:166px;font-weight:800;font-size:64px;line-height:1.1;letter-spacing:-.02em}
+.h1 em{font-style:normal;color:var(--orange)}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:30px;box-shadow:0 16px 44px rgba(80,45,10,.09)}
+.badge{width:84px;height:84px;border-radius:24px;background:var(--peach);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:48px}
+
+/* intro / close lockup */
+.lock{position:absolute;left:0;width:1920px;height:1082px}
+.title{position:absolute;left:0;width:1920px;text-align:center;font-weight:800;font-size:78px;letter-spacing:-.025em;line-height:1.1}
+.title em{font-style:normal;color:var(--orange)}
+.sub{position:absolute;left:0;width:1920px;text-align:center;font-weight:600;font-size:30px;color:var(--muted);letter-spacing:.02em}
+
+/* heard */
+.theme{position:absolute;top:340px;width:396px;height:380px;padding:40px 36px}
+.theme h3{font-weight:800;font-size:34px;letter-spacing:-.01em;margin:30px 0 14px}
+.theme p{font-weight:500;font-size:25px;line-height:1.42;color:var(--muted)}
+
+/* idea */
+.chip{position:absolute;display:flex;align-items:center;gap:22px;border-radius:26px;font-weight:700;font-size:32px;padding:0 36px}
+.chip .badge{width:64px;height:64px;font-size:36px;border-radius:20px}
+
+/* protect */
+.pc{position:absolute;top:316px;width:536px;height:384px;padding:38px 40px}
+.pc h3{font-weight:800;font-size:34px;margin:24px 0 12px}
+.pc p{font-weight:500;font-size:24px;line-height:1.42;color:var(--muted)}
+.pc p b{color:var(--ink);font-weight:700}
+.strip{position:absolute;left:120px;top:724px;width:1680px;height:84px;border-radius:26px;background:var(--peach);display:flex;align-items:center;justify-content:center;gap:70px;font-weight:700;font-size:28px}
+.strip span{display:flex;align-items:center;gap:14px}
+.strip svg{font-size:34px;color:var(--orange-d);stroke-width:2.4}
+
+/* traffic light */
+.row{position:absolute;left:120px;width:1680px;height:164px;padding:0 40px;display:flex;align-items:center;gap:34px}
+.lamp{flex:none;width:92px;height:92px;border-radius:50%}
+.row .lab{flex:none;width:330px}
+.row .lab b{display:block;font-weight:800;font-size:34px;letter-spacing:.01em}
+.row .lab i{display:block;font-style:normal;font-weight:600;font-size:21px;color:var(--muted);margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:12px 14px;flex:1}
+.pill{position:relative;font-weight:600;font-size:25px;padding:11px 22px;border-radius:999px;white-space:nowrap}
+
+/* discuss */
+.q{position:absolute;top:316px;width:820px;height:280px;padding:40px 48px}
+.q .num{font-weight:800;font-size:90px;color:var(--peach2);line-height:1}
+.q p{font-weight:700;font-size:38px;line-height:1.3;margin-top:14px;letter-spacing:-.01em}
+#ring{position:absolute;left:745px;top:640px;width:440px;height:150px;opacity:0}
+#ring svg{position:absolute;left:0;top:0;width:150px;height:150px;transform:rotate(-90deg)}
+#ring .num{position:absolute;left:0;top:0;width:150px;height:150px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:56px;color:var(--orange)}
+#ring .cap{position:absolute;left:176px;top:0;height:150px;display:flex;align-items:center;white-space:nowrap;font-weight:700;font-size:26px;line-height:1.25;color:var(--muted)}
+
+/* answers */
+.tab{position:absolute;left:120px;width:430px;height:84px;border-radius:24px;display:flex;align-items:center;padding:0 26px;gap:18px;font-weight:700;font-size:27px;color:#9A9288}
+.tab i{font-style:normal;flex:none;width:38px;height:38px;border-radius:50%;border:2.5px solid #D8D0C5;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800}
+.tab.hl{background:var(--peach);color:var(--orange-d)}
+.tab.hl i{background:var(--orange);border-color:var(--orange);color:#fff}
+.panel{position:absolute;left:600px;top:150px;width:1200px;height:640px;padding:46px 56px}
+.panel h2{font-weight:800;font-size:50px;line-height:1.12;letter-spacing:-.02em;margin-left:112px;margin-top:-4px}
+.panel .badge{position:absolute;left:56px;top:46px}
+.pt{position:absolute;left:56px;right:56px;display:flex;align-items:center;gap:22px;font-weight:600;font-size:30px;line-height:1.3}
+.pt .dot{flex:none;width:52px;height:52px;border-radius:50%;background:var(--green-t);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:30px}
+.pt .dot svg{stroke-width:2.6}
+.note{position:absolute;left:56px;right:56px;bottom:40px;border-radius:22px;background:var(--peach);padding:20px 30px;font-weight:700;font-size:27px;color:var(--orange-d);text-align:center}
+.ex{position:absolute;left:56px;right:56px;border-radius:26px;padding:26px 34px 26px 34px}
+.ex small{display:flex;align-items:center;gap:12px;font-weight:800;font-size:22px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+.ex small svg{font-size:30px;stroke-width:2.8}
+.ex p{font-weight:600;font-size:29px;line-height:1.38}
+.step{position:absolute;top:240px;width:330px;text-align:center}
+.step .c{width:96px;height:96px;margin:0 auto 22px;border-radius:50%;background:var(--orange);color:#fff;font-weight:800;font-size:44px;display:flex;align-items:center;justify-content:center}
+.step p{font-weight:700;font-size:29px;line-height:1.3}
+.link{position:absolute;top:286px;height:4px;background:var(--peach2);border-radius:2px}
+.layer{position:absolute;left:56px;height:96px;border-radius:26px;display:flex;align-items:center;padding:0 34px;gap:20px;font-weight:700;font-size:28px}
+.layer svg{font-size:36px;flex:none}
+
+/* close */
+.pillar{position:absolute;top:400px;width:396px;height:300px;padding:36px 34px}
+.pillar h3{font-weight:800;font-size:31px;line-height:1.2;margin-top:26px}
+.big{position:absolute;left:0;width:1920px;text-align:center;font-weight:800;font-size:70px;letter-spacing:-.02em;line-height:1.14}
+.big em{font-style:normal;color:var(--orange)}
+.fine{position:absolute;left:0;width:1920px;text-align:center;font-weight:500;font-size:20px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-checkc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16.5 9"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9-9.6A4.9 4.9 0 0 1 12 7.2a4.9 4.9 0 0 1 9 3.7c-1.5 5-9 9.6-9 9.6z"/></symbol>
+  <symbol id="i-balance" viewBox="0 0 24 24"><path d="M12 4v16M6 20h12M4 8h16"/><path d="M7 8l-3 6.5a3.4 3.4 0 0 0 6 0zM17 8l-3 6.5a3.4 3.4 0 0 0 6 0z"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><path d="M4 21V6l8-3.5L20 6v15M9.5 21v-5h5v5M8 9.5h2M14 9.5h2M8 13h2M14 13h2"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.2 3 3.2 15 0 18M12 3c-3.2 3-3.2 15 0 18"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4.5 4.5 0 0 0 6.4.4l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2M14 10a4.5 4.5 0 0 0-6.4-.4l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l8.5-8.5M16 7l3 3M14 9l2 2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c.6-4.2 3.8-6.5 8-6.5s7.4 2.3 8 6.5"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 12.5l9 5 9-5M3 17l9 5 9-5"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l1-4.5L16.5 4a2.1 2.1 0 0 1 3 3L8 18.5z"/><path d="M14.5 6l3 3"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v5.5c0 4.6-3.2 8-8 9.5-4.8-1.5-8-4.9-8-9.5V6z"/><path d="M8.7 12l2.4 2.4 4.2-4.6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-steps" viewBox="0 0 24 24"><path d="M3 20h5v-5h5v-5h5V5h3"/></symbol>
+</defs></svg>
+
+<div id="stage">
+
+  <div id="bg">
+    <svg id="ridge2" viewBox="0 0 3840 340" preserveAspectRatio="none"><path fill="#FDEBDD" d="M0 340V230L170 120L300 215L470 70L660 240L840 150L1010 250L1220 110L1420 235L1600 160L1780 245L1920 230L2090 120L2220 215L2390 70L2580 240L2760 150L2930 250L3140 110L3340 235L3520 160L3700 245L3840 230V340Z"/></svg>
+    <svg id="ridge1" viewBox="0 0 3840 340" preserveAspectRatio="none"><path fill="#FDE0CB" opacity=".75" d="M0 340V280L260 190L420 262L700 150L930 270L1180 205L1480 275L1700 215L1920 280L2180 190L2340 262L2620 150L2850 270L3100 205L3400 275L3620 215L3840 280V340Z"/></svg>
+  </div>
+
+  <div id="brand"><img src="assets/logo-mark.png" alt=""><b>AI SUMMIT GROUP</b></div>
+  <div id="tag">Privacy &amp; Security Training</div>
+
+  <!-- ================= INTRO ================= -->
+  <section class="scene" data-scene="intro" data-chrome="none">
+    <img class="a lock" data-cue="scene" data-delay="0" data-dur="1.1" data-anim="pop" src="assets/logo-mark-layer.png" style="top:-190px" alt="">
+    <img class="a lock" data-cue="scene" data-delay=".75" data-dur="1.2" data-anim="left" src="assets/logo-wordmark-layer.png" style="top:-190px" alt="">
+    <div class="a title" data-cue="i2" data-delay="-.3" data-anim="up" style="top:560px">Using Claude <em>with Confidence</em></div>
+    <div class="a sub" data-cue="i3" data-delay="-.2" data-anim="up" style="top:672px">Privacy · Security · Smart habits for our team</div>
+  </section>
+
+  <!-- ================= WHAT YOU TOLD US ================= -->
+  <section class="scene" data-scene="heard" data-chrome="full">
+    <div class="a eyebrow" data-cue="scene" data-anim="up">What you told us</div>
+    <div class="a h1" data-cue="scene" data-delay=".12" data-anim="up">Four themes, <em>one team.</em></div>
+
+    <div class="a card theme" data-cue="h2" data-anim="pop" style="left:120px">
+      <div class="badge"><svg class="ic"><use href="#i-lock"/></svg></div>
+      <h3>Privacy &amp; security</h3><p>Are we protecting our team and our clients?</p></div>
+    <div class="a card theme" data-cue="h3" data-anim="pop" style="left:548px">
+      <div class="badge"><svg class="ic"><use href="#i-checkc"/></svg></div>
+      <h3>Accuracy</h3><p>Can we trust the answers it gives us?</p></div>
+    <div class="a card theme" data-cue="h4" data-anim="pop" style="left:976px">
+      <div class="badge"><svg class="ic"><use href="#i-heart"/></svg></div>
+      <h3>Authenticity</h3><p>Will our work keep its human touch?</p></div>
+    <div class="a card theme" data-cue="h5" data-anim="pop" style="left:1404px">
+      <div class="badge"><svg class="ic"><use href="#i-balance"/></svg></div>
+      <h3>Balance</h3><p>How much do we share, and how much is too much?</p></div>
+  </section>
+
+  <!-- ================= THE BIG IDEA ================= -->
+  <section class="scene" data-scene="idea" data-chrome="full">
+    <div class="a eyebrow" data-cue="scene" data-anim="up">The big idea</div>
+    <div class="a h1" data-cue="k1" data-delay="-.1" data-anim="up" style="font-size:72px">Treat Claude like a<br><em>brand-new team member.</em></div>
+
+    <div class="a chip" data-cue="k2" data-frac="0" data-anim="pop" style="left:120px;top:430px;width:760px;height:120px;background:var(--red-t);color:var(--red)">
+      <div class="badge" style="background:#fff;color:var(--red)"><svg class="ic"><use href="#i-key"/></svg></div>
+      <span><s style="text-decoration-thickness:3px">Every password, day one</s></span></div>
+    <div class="a chip" data-cue="k2" data-frac=".52" data-anim="up" style="left:120px;top:590px;width:540px;height:120px;justify-content:center;background:var(--green-t);color:var(--green)"><svg class="ic" style="font-size:44px;stroke-width:2.6"><use href="#i-check"/></svg><span style="color:var(--ink)">Guide them</span></div>
+    <div class="a chip" data-cue="k2" data-frac=".69" data-anim="up" style="left:690px;top:590px;width:540px;height:120px;justify-content:center;background:var(--green-t);color:var(--green)"><svg class="ic" style="font-size:44px;stroke-width:2.6"><use href="#i-check"/></svg><span style="color:var(--ink)">Check their work</span></div>
+    <div class="a chip" data-cue="k2" data-frac=".84" data-anim="up" style="left:1260px;top:590px;width:540px;height:120px;justify-content:center;background:var(--green-t);color:var(--green)"><svg class="ic" style="font-size:44px;stroke-width:2.6"><use href="#i-check"/></svg><span style="color:var(--ink)">Stay in charge</span></div>
+  </section>
+
+  <!-- ================= PROTECT: WHERE INFO GOES ================= -->
+  <section class="scene" data-scene="protect" data-chrome="full">
+    <div class="a eyebrow" data-cue="p1" data-delay="-.2" data-anim="up">Protect</div>
+    <div class="a h1" data-cue="p1" data-delay="-.1" data-anim="up">Know where your <em>information goes.</em></div>
+
+    <div class="a card pc" data-cue="p2" data-frac=".02" data-anim="pop" style="left:120px">
+      <div class="badge"><svg class="ic"><use href="#i-building"/></svg></div>
+      <h3>Your plan</h3>
+      <p><b>Team &amp; Enterprise:</b> not used to train models by default.<br><b>Personal accounts:</b> check the Model Improvement setting.</p></div>
+    <div class="a card pc" data-cue="p3" data-frac="0" data-anim="pop" style="left:692px">
+      <div class="badge"><svg class="ic"><use href="#i-globe"/></svg></div>
+      <h3>The internet</h3>
+      <p>Only reached through <b>features that are turned on.</b></p></div>
+    <div class="a card pc" data-cue="p4" data-frac="0" data-anim="pop" style="left:1264px">
+      <div class="badge"><svg class="ic"><use href="#i-link"/></svg></div>
+      <h3>Connected apps</h3>
+      <p>Drive, Gmail and more only show Claude <b>what you can already see.</b></p></div>
+
+    <div class="a strip" data-cue="p5" data-anim="up">
+      <span><svg class="ic"><use href="#i-check"/></svg>Connect only what we need</span>
+      <span><svg class="ic"><use href="#i-check"/></svg>Disconnect what we stop using</span></div>
+  </section>
+
+  <!-- ================= PROTECT: TRAFFIC LIGHT ================= -->
+  <section class="scene" data-scene="light" data-chrome="full">
+    <div class="a eyebrow" data-cue="t1" data-delay="-.2" data-anim="up">Protect</div>
+    <div class="a h1" data-cue="t1" data-delay="-.1" data-anim="up">The <em>traffic light</em> rule</div>
+
+    <div class="a card row" data-cue="t2" data-anim="right" style="top:272px;border-left:12px solid var(--red)">
+      <div class="lamp" style="background:var(--red);box-shadow:0 0 0 12px var(--red-t)"></div>
+      <div class="lab"><b style="color:var(--red)">NEVER SHARE</b><i>No exceptions</i></div>
+      <div class="chips">
+        <span class="a pill" data-cue="t2" data-frac=".16" data-anim="pop" style="background:var(--red-t);color:#B02E22">Passwords &amp; logins</span>
+        <span class="a pill" data-cue="t2" data-frac=".34" data-anim="pop" style="background:var(--red-t);color:#B02E22">API keys</span>
+        <span class="a pill" data-cue="t2" data-frac=".44" data-anim="pop" style="background:var(--red-t);color:#B02E22">Full card or bank numbers</span>
+        <span class="a pill" data-cue="t2" data-frac=".64" data-anim="pop" style="background:var(--red-t);color:#B02E22">Social Security &amp; government IDs</span>
+      </div></div>
+
+    <div class="a card row" data-cue="t3" data-anim="right" style="top:452px;border-left:12px solid var(--amber)">
+      <div class="lamp" style="background:var(--amber);box-shadow:0 0 0 12px var(--amber-t)"></div>
+      <div class="lab"><b style="color:#C98400">ASK FIRST</b><i>Approved tools only</i></div>
+      <div class="chips">
+        <span class="a pill" data-cue="t3" data-frac=".32" data-anim="pop" style="background:var(--amber-t);color:#8A5A00">Client details</span>
+        <span class="a pill" data-cue="t3" data-frac=".43" data-anim="pop" style="background:var(--amber-t);color:#8A5A00">Anything under a confidentiality agreement</span>
+        <span class="a pill" data-cue="t3" data-frac=".72" data-anim="pop" style="background:var(--amber-t);color:#8A5A00">Employee, payroll &amp; medical records</span>
+      </div></div>
+
+    <div class="a card row" data-cue="t4" data-anim="right" style="top:632px;border-left:12px solid var(--green)">
+      <div class="lamp" style="background:var(--green);box-shadow:0 0 0 12px var(--green-t)"></div>
+      <div class="lab"><b style="color:var(--green)">GO AHEAD</b><i>Safe to share</i></div>
+      <div class="chips">
+        <span class="a pill" data-cue="t4" data-frac=".3" data-anim="pop" style="background:var(--green-t);color:#1F7A4A">Your own drafts</span>
+        <span class="a pill" data-cue="t4" data-frac=".55" data-anim="pop" style="background:var(--green-t);color:#1F7A4A">Public information</span>
+        <span class="a pill" data-cue="t4" data-frac=".82" data-anim="pop" style="background:var(--green-t);color:#1F7A4A">Ideas &amp; outlines</span>
+      </div></div>
+  </section>
+
+  <!-- ================= DISCUSS ================= -->
+  <section class="scene" data-scene="discuss" data-chrome="full">
+    <div class="a eyebrow" data-cue="d1" data-delay="-.2" data-anim="up">Pause &amp; discuss</div>
+    <div class="a h1" data-cue="d1" data-delay="-.1" data-anim="up">Let's talk it <em>through.</em></div>
+
+    <div class="a card q" data-cue="d2" data-frac="0" data-anim="pop" style="left:120px">
+      <div class="num">1</div><p>What is one task Claude could take off your plate this week?</p></div>
+    <div class="a card q" data-cue="d2" data-frac=".5" data-anim="pop" style="left:980px">
+      <div class="num">2</div><p>What is one thing you would never paste into it?</p></div>
+
+    <div id="ring">
+      <svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="64" fill="none" stroke="var(--line)" stroke-width="12"/><circle id="ringarc" cx="75" cy="75" r="64" fill="none" stroke="var(--orange)" stroke-width="12" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0"/></svg>
+      <div class="num" id="ringnum">7</div>
+      <div class="cap">Take a moment<br>and talk it over</div>
+    </div>
+  </section>
+
+  <!-- ================= YOUR CONCERNS ANSWERED ================= -->
+  <section class="scene" data-scene="answers" data-chrome="full">
+    <div class="a eyebrow" data-cue="scene" data-anim="up">Your concerns</div>
+
+    <!-- left rail -->
+    <div class="a tab" data-cue="a0" data-frac=".1" data-anim="left" style="top:196px"><i>1</i>Accuracy</div>
+    <div class="a tab" data-cue="a0" data-frac=".25" data-anim="left" style="top:300px"><i>2</i>Human touch</div>
+    <div class="a tab" data-cue="a0" data-frac=".4" data-anim="left" style="top:404px"><i>3</i>How much to share</div>
+    <div class="a tab" data-cue="a0" data-frac=".55" data-anim="left" style="top:508px"><i>4</i>Structure</div>
+    <div class="a tab" data-cue="a0" data-frac=".7" data-anim="left" style="top:612px"><i>5</i>Data breaches</div>
+    <div class="a tab hl" data-cue="a1" data-until="a2" data-anim="fade" data-dur=".3" style="top:196px"><i>1</i>Accuracy</div>
+    <div class="a tab hl" data-cue="a2" data-until="a3" data-anim="fade" data-dur=".3" style="top:300px"><i>2</i>Human touch</div>
+    <div class="a tab hl" data-cue="a3" data-until="a4" data-anim="fade" data-dur=".3" style="top:404px"><i>3</i>How much to share</div>
+    <div class="a tab hl" data-cue="a4" data-until="a5" data-anim="fade" data-dur=".3" style="top:508px"><i>4</i>Structure</div>
+    <div class="a tab hl" data-cue="a5" style="top:612px" data-anim="fade" data-dur=".3"><i>5</i>Data breaches</div>
+
+    <!-- 1 accuracy -->
+    <div class="a card panel" data-cue="a1" data-until="a2" data-anim="pop" data-dur=".5">
+      <div class="badge"><svg class="ic"><use href="#i-checkc"/></svg></div>
+      <h2>Verify, then trust.</h2>
+      <div class="a pt" data-cue="a1" data-frac=".5" data-anim="up" style="top:190px"><div class="dot"><svg class="ic"><use href="#i-check"/></svg></div>Confident is not the same as correct</div>
+      <div class="a pt" data-cue="a1b" data-frac=".02" data-anim="up" style="top:282px"><div class="dot"><svg class="ic"><use href="#i-check"/></svg></div>It improves what you know. It never replaces your judgment</div>
+      <div class="a pt" data-cue="a1b" data-frac=".55" data-anim="up" style="top:374px"><div class="dot"><svg class="ic"><use href="#i-check"/></svg></div>Spot-check names, numbers &amp; claims</div>
+      <div class="a note" data-cue="a1b" data-frac=".85" data-anim="up">A person reviews everything before it goes out</div>
+    </div>
+
+    <!-- 2 human touch -->
+    <div class="a card panel" data-cue="a2" data-until="a3" data-anim="pop" data-dur=".5">
+      <div class="badge"><svg class="ic"><use href="#i-pencil"/></svg></div>
+      <h2>Claude drafts.<br>You decide.</h2>
+      <div class="a abs" data-cue="a2" data-frac=".35" data-anim="left" style="left:56px;top:228px;width:480px;height:200px;border-radius:26px;background:var(--peach);padding:30px 34px">
+        <div style="font-weight:800;font-size:22px;letter-spacing:.14em;color:var(--orange-d)">CLAUDE</div>
+        <div style="font-weight:700;font-size:31px;line-height:1.3;margin-top:12px">Drafts, organizes &amp; speeds things up</div></div>
+      <div class="a abs" data-cue="a2b" data-frac=".0" data-anim="right" style="left:664px;top:228px;width:480px;height:200px;border-radius:26px;background:var(--green-t);padding:30px 34px">
+        <div style="font-weight:800;font-size:22px;letter-spacing:.14em;color:var(--green)">YOU</div>
+        <div style="font-weight:700;font-size:31px;line-height:1.3;margin-top:12px">Voice, judgment, relationships &amp; creativity</div></div>
+      <div class="a abs" data-cue="a2b" data-frac=".1" data-anim="fade" style="left:550px;top:296px;font-size:62px;color:var(--orange)"><svg class="ic" style="stroke-width:2.4"><use href="#i-steps"/></svg></div>
+      <div class="a note" data-cue="a2b" data-frac=".5" data-anim="up">Clear guidance + examples = it sounds more like us</div>
+    </div>
+
+    <!-- 3 share -->
+    <div class="a card panel" data-cue="a3" data-until="a4" data-anim="pop" data-dur=".5">
+      <div class="badge"><svg class="ic"><use href="#i-balance"/></svg></div>
+      <h2 style="font-size:44px">Share the situation,<br>not the sensitive details.</h2>
+      <div class="a ex" data-cue="a3" data-frac=".5" data-anim="up" style="top:196px;background:var(--red-t);color:#8E2A20">
+        <small style="color:var(--red)"><svg class="ic"><use href="#i-x"/></svg>Too much</small>
+        <p>“Write a late-payment reminder to <b>[client's full name, home address and account number]</b>…”</p></div>
+      <div class="a ex" data-cue="a3b" data-frac="0" data-anim="up" style="top:408px;background:var(--green-t);color:#165C37">
+        <small style="color:var(--green)"><svg class="ic"><use href="#i-check"/></svg>Just right</small>
+        <p>“Write a friendly late-payment reminder to <b>Client A</b>. Tone: warm and professional. Under 120 words.”</p></div>
+    </div>
+
+    <!-- 4 structure -->
+    <div class="a card panel" data-cue="a4" data-until="a5" data-anim="pop" data-dur=".5">
+      <div class="badge"><svg class="ic"><use href="#i-steps"/></svg></div>
+      <h2>Structure first,<br>then test.</h2>
+      <div class="link a" data-cue="a4b" data-frac=".1" data-anim="grow" data-dur="1.2" style="left:200px;width:800px"></div>
+      <div class="a step" data-cue="a4b" data-frac="0" data-anim="up" style="left:36px"><div class="c">1</div><p>Give clear<br>guidelines</p></div>
+      <div class="a step" data-cue="a4b" data-frac=".18" data-anim="up" style="left:435px"><div class="c">2</div><p>Spot-check<br>its work</p></div>
+      <div class="a step" data-cue="a4b" data-frac=".32" data-anim="up" style="left:834px"><div class="c">3</div><p>Fine-tune<br>over time</p></div>
+      <div class="a note" data-cue="a4b" data-frac=".55" data-anim="up">Messy process in, messy results out. Just faster.</div>
+    </div>
+
+    <!-- 5 breaches -->
+    <div class="a card panel" data-cue="a5" data-anim="pop" data-dur=".5">
+      <div class="badge"><svg class="ic"><use href="#i-layers"/></svg></div>
+      <h2>Protect in layers.</h2>
+      <div class="a layer" data-cue="a5b" data-frac="0" data-anim="left" style="top:176px;width:1000px;background:var(--peach);color:var(--orange-d)"><svg class="ic"><use href="#i-shield"/></svg>Approved tools &amp; accounts only</div>
+      <div class="a layer" data-cue="a5b" data-frac=".09" data-anim="left" style="top:288px;width:1000px;background:var(--peach);color:var(--orange-d)"><svg class="ic"><use href="#i-lock"/></svg>Strong, unique passwords + two-step login</div>
+      <div class="a layer" data-cue="a5b" data-frac=".4" data-anim="left" style="top:400px;width:1000px;background:var(--peach);color:var(--orange-d)"><svg class="ic"><use href="#i-checkc"/></svg>The traffic light rules</div>
+      <div class="a layer" data-cue="a5b" data-frac=".55" data-anim="left" style="top:512px;width:1000px;background:var(--peach);color:var(--orange-d)"><svg class="ic"><use href="#i-heart"/></svg>Speak up fast if something slips</div>
+    </div>
+  </section>
+
+  <!-- ================= CLOSE ================= -->
+  <section class="scene" data-scene="close" data-chrome="trail">
+    <div class="a big" data-cue="c1" data-delay="-.2" data-until="c3" data-anim="up" style="top:178px">The view from <em>the summit</em></div>
+
+    <div class="a card pillar" data-cue="c2" data-frac="0" data-until="c3" data-anim="pop" style="left:120px">
+      <div class="badge"><svg class="ic"><use href="#i-shield"/></svg></div><h3>Protect what matters</h3></div>
+    <div class="a card pillar" data-cue="c2" data-frac=".22" data-until="c3" data-anim="pop" style="left:548px">
+      <div class="badge"><svg class="ic"><use href="#i-checkc"/></svg></div><h3>Verify what it gives you</h3></div>
+    <div class="a card pillar" data-cue="c2" data-frac=".48" data-until="c3" data-anim="pop" style="left:976px">
+      <div class="badge"><svg class="ic"><use href="#i-heart"/></svg></div><h3>Stay human</h3></div>
+    <div class="a card pillar" data-cue="c2" data-frac=".62" data-until="c3" data-anim="pop" style="left:1404px">
+      <div class="badge"><svg class="ic"><use href="#i-user"/></svg></div><h3>Guide Claude like a new team member</h3></div>
+
+    <div class="a big" data-cue="c3" data-frac=".3" data-until="c4" data-anim="up" style="top:330px">Thank you for asking<br><em>honest questions.</em></div>
+
+    <img class="a lock" data-cue="c4" data-delay="-.1" data-dur="1.0" data-anim="pop" src="assets/logo-mark-layer.png" style="top:-215px" alt="">
+    <img class="a lock" data-cue="c4" data-delay=".5" data-dur="1.1" data-anim="left" src="assets/logo-wordmark-layer.png" style="top:-215px" alt="">
+    <div class="a title" data-cue="c4" data-delay=".9" data-anim="up" style="top:520px;font-size:60px">Keep the questions coming.</div>
+    <div class="a fine" data-cue="c4" data-delay="1.4" data-anim="fade" style="top:628px">Narration is an AI-generated voice. Script and visuals created with the help of Claude.</div>
+  </section>
+
+  <div id="caption"><div id="captext"></div></div>
+
+  <div id="trail">
+    <div class="line"></div><div class="fill" id="trailfill"></div>
+    <div class="n" style="left:480px"></div><div class="lab" style="left:480px">Welcome</div>
+    <div class="n" style="left:720px"></div><div class="lab" style="left:720px">Learn</div>
+    <div class="n" style="left:960px"></div><div class="lab" style="left:960px">Discuss</div>
+    <div class="n" style="left:1200px"></div><div class="lab" style="left:1200px">Answers</div>
+    <div class="n" style="left:1440px"></div><div class="lab" style="left:1440px">Summit</div>
+  </div>
+</div>
+
+<script src="build/timeline.js"></script>
+<script>
+(function(){
+  const TL = window.TIMELINE;
+  const clamp = (x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+  const easeOut = p=>1-Math.pow(1-p,3);
+  const easeBack = p=>{const c1=1.35,c3=c1+1;return 1+c3*Math.pow(p-1,3)+c1*Math.pow(p-1,2)};
+
+  const sent = {};
+  TL.scenes.forEach(sc=>sc.sentences.forEach(s=>sent[s.id]=s));
+  const total = TL.duration;
+
+  // --- scenes and their animated children
+  const sceneEls = [...document.querySelectorAll('.scene')].map(el=>{
+    const sc = TL.scenes.find(s=>s.id===el.dataset.scene);
+    if(!sc) throw new Error('no timeline for scene '+el.dataset.scene);
+    const anims = [...el.querySelectorAll('.a')].map(a=>{
+      const cue = a.dataset.cue;
+      let base;
+      if(cue==='scene') base = sc.start + 0.45;
+      else {
+        const s = sent[cue]; if(!s) throw new Error('unknown cue '+cue);
+        base = s.start + parseFloat(a.dataset.frac||0)*(s.end-s.start);
+      }
+      return {el:a, at: base+parseFloat(a.dataset.delay||0), dur: parseFloat(a.dataset.dur||0.6),
+              until: a.dataset.until ? sent[a.dataset.until].start-0.05 : null, type: a.dataset.anim||'fade'};
+    });
+    return {el, sc, anims, chrome: el.dataset.chrome};
+  });
+  const lastScene = TL.scenes[TL.scenes.length-1];
+
+  // --- captions split into readable chunks, timed by character share
+  const caps = [];
+  TL.scenes.forEach(sc=>sc.sentences.forEach(s=>{
+    const words = s.caption.split(' '), n = Math.ceil(s.caption.length/92), target = s.caption.length/n;
+    let parts=[], cur='';
+    words.forEach(w=>{
+      if(cur && (cur.length+1+w.length > target*1.18 || (cur.length>=target*0.85 && /[.,:;?!]$/.test(cur)))){parts.push(cur);cur=w}
+      else cur = cur ? cur+' '+w : w;
+    });
+    if(cur) parts.push(cur);
+    const len = parts.reduce((a,p)=>a+p.length,0); let at = s.start;
+    parts.forEach(p=>{const d=(s.end-s.start)*p.length/len; caps.push({s:at,e:at+d,text:p}); at+=d;});
+  }));
+
+  // --- trail: the line reaches node k when phase k begins
+  const reach = [0,1,2,3,4].map(k=>{const sc=TL.scenes.find(s=>s.phase===k);return sc?sc.start:total});
+  const nodes=[...document.querySelectorAll('#trail .n')], labs=[...document.querySelectorAll('#trail .lab')];
+
+  const $ = id=>document.getElementById(id);
+  const brand=$('brand'), tag=$('tag'), trail=$('trail'), fill=$('trailfill'), cap=$('caption'), capt=$('captext');
+  const ring=$('ring'), arc=$('ringarc'), ringnum=$('ringnum'), ridge1=$('ridge1'), ridge2=$('ridge2');
+  const win=(t,sc)=>clamp((t-(sc.start-.25))/.5)*clamp(((sc.end+.25)-t)/.5);
+
+  function applyAnim(a,t,sceneOp){
+    const p = clamp((t-a.at)/a.dur);
+    let o = a.type==='pop' ? clamp(p*1.6) : easeOut(p);
+    const e = a.type==='pop' ? easeBack(p) : easeOut(p);
+    if(a.until!==null) o *= 1-clamp((t-a.until)/.35);
+    const s = a.el.style; s.opacity = o;
+    switch(a.type){
+      case 'up':   s.transform=`translateY(${(1-e)*36}px)`;break;
+      case 'left': s.transform=`translateX(${-(1-e)*70}px)`;break;
+      case 'right':s.transform=`translateX(${(1-e)*70}px)`;break;
+      case 'pop':  s.transform=`scale(${0.9+0.1*e})`;break;
+      case 'grow': s.transformOrigin='0 50%'; s.transform=`scaleX(${e})`;break;
+      default: s.transform='none';
+    }
+  }
+
+  window.render = function(t){
+    // background drift
+    ridge1.style.transform=`translateX(${-((t*9)%1920)}px)`;
+    ridge2.style.transform=`translateX(${-((t*4)%1920)}px)`;
+
+    // scenes
+    sceneEls.forEach(S=>{
+      const {sc,el}=S;
+      if(t<sc.start-0.02 || t>=sc.end+0.02){el.style.display='none';return}
+      el.style.display='block';
+      const fin = sc.start===0 ? clamp(t/0.3) : clamp((t-sc.start)/0.5);
+      const fout = sc===lastScene ? 1 : clamp((sc.end-t)/0.5);
+      el.style.opacity = Math.min(fin,fout);
+      S.anims.forEach(a=>applyAnim(a,t));
+    });
+
+    // chrome
+    let b=0, tr=0;
+    sceneEls.forEach(S=>{const w=win(t,S.sc); if(S.chrome==='full'){b+=w;tr+=w} else if(S.chrome==='trail'){tr+=w}});
+    brand.style.opacity=tag.style.opacity=clamp(b); trail.style.opacity=clamp(tr);
+
+    // trail progress
+    let pos=0;
+    for(let k=0;k<4;k++){ if(t>=reach[k] && t<reach[k+1]) pos = k + (t-reach[k])/(reach[k+1]-reach[k]); }
+    if(t>=reach[4]) pos=4;
+    fill.style.width = (pos*240)+'px';
+    nodes.forEach((n,k)=>{n.className='n'+(pos>=k+0.999?' done':(pos>=k?' on':'')); labs[k].className='lab'+(Math.floor(pos+0.001)===k?' on':'')});
+
+    // captions
+    const c = caps.find(c=>t>=c.s && t<c.e);
+    if(c){ capt.textContent=c.text; cap.style.opacity=clamp((t-c.s)/0.12)*clamp((c.e-t)/0.1+0.2); }
+    else cap.style.opacity=0;
+
+    // discussion countdown ring
+    const d = TL.scenes.find(s=>s.id==='discuss');
+    if(d && d.hold[1]>d.hold[0]){
+      const q=(t-d.hold[0])/(d.hold[1]-d.hold[0]);
+      ring.style.opacity = clamp((t-d.hold[0]+0.4)/0.4)*clamp((d.end-0.4-t)/0.4);
+      arc.style.strokeDashoffset = clamp(q);
+      ringnum.textContent = Math.max(0,Math.ceil((d.hold[1]-t)));
+    }
+  };
+
+  // --- stage scaling so the page can be previewed in any window
+  function fit(){const k=Math.min(innerWidth/1920,innerHeight/1080);$('stage').style.transform=`scale(${k})`}
+  addEventListener('resize',fit); fit();
+
+  window.TOTAL = total;
+  window.READY = document.fonts.ready.then(()=>Promise.all([...document.images].map(i=>i.decode?i.decode().catch(()=>{}):0))).then(()=>true);
+  const q=new URLSearchParams(location.search); if(q.has('t')) window.READY.then(()=>render(parseFloat(q.get('t'))));
+  else render(0);
+})();
+</script>
+</body>
+</html>

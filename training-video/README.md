@@ -1,0 +1,66 @@
+# AI Summit Group: "Using Claude With Confidence"
+
+A 3:50 team training video on privacy, security and smart habits with Claude. Built from code, so every
+slide, caption and the voice-over come from the files in this folder and can be changed and re-rendered.
+
+| File | What it is |
+|---|---|
+| `ai-summit-claude-training.mp4` | The finished video (1080p, narration + soft music + burned-in captions) |
+| `SCRIPT.md` | The narration, scene by scene (generated from `episode/script.json`) |
+| `build/captions.srt` | Subtitles as a separate file, for platforms that take them |
+| `episode/script.json` | Source of truth for the words, scene order and pacing |
+| `video.html` | All visuals. Brand colors and fonts are the variables at the top (`:root`) |
+| `assets/` | Your logo (original + cut-out layers) and the Montserrat font files |
+| `tools/` | The build scripts |
+
+## Before this goes to the team
+
+1. **Watch and listen all the way through.** The narration is an AI voice and was not heard by the author, so
+   check pronunciation, pacing and that every caption matches what is said.
+2. **Confirm which Claude plan the team is on.** The "Your plan" slide and one narration line say that on
+   Team and Enterprise plans Anthropic does not train on conversations by default, and that personal accounts
+   have a Model Improvement setting. If the team is on a different plan, change `p2` in `episode/script.json`
+   and the "Your plan" card in `video.html`.
+3. **Confirm "approved work account."** The video tells people to stick to approved tools and accounts. Make sure
+   that matches what the company has actually approved.
+4. If this turns into a written company policy, have a lawyer in your state review it. This video is training,
+   not legal advice.
+
+## Where the facts came from
+
+| Claim in the video | Source |
+|---|---|
+| Personal (Free/Pro/Max) chats are used for training only if the Model Improvement setting is on; Incognito chats are excluded | [Anthropic privacy center: Is my data used for model training?](https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training) |
+| Connected apps: Claude inherits each person's permissions; owners control what is enabled | [Anthropic help center: connectors](https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities) |
+| Team/Enterprise: conversations, files and connected data are not used for training by default | [Claude Academy: Enterprise administrator guide](https://academy.claude.com/tutorials/claude-enterprise-administrator-guide), seen as a search summary. Verify against your plan's Commercial Terms |
+
+The traffic-light categories (never share passwords, API keys, card/bank numbers, government IDs; ask first for
+client, confidential, HR/payroll/medical information) follow the company AI-use policy. The team's own survey
+answers are summarized as four themes without names.
+
+## Rebuilding
+
+Needs `ffmpeg`, Node + Playwright, and Python with `piper-tts` and `numpy`. The voice is Piper's
+`en_US-lessac-high`.
+
+```bash
+python tools/prep_logo.py                       # logo cut-outs (only if the logo changes)
+python tools/build_audio.py /path/to/voices      # narration + build/timeline.js + captions
+python tools/make_music.py 230                   # music bed, same length as the narration
+node tools/render.js 30 4                        # silent video, 4 parallel browsers (~5 min)
+tools/mix.sh                                     # mix audio onto the video
+```
+
+Notes:
+
+- Re-run `build_audio.py` and `render.js` together. The voice varies slightly run to run, so the timeline changes
+  and the visuals must be re-rendered to match.
+- `node tools/snap.js out_dir 12 40 95` saves still frames at those seconds to check layout fast.
+- To swap in a human voice, record each scene against `SCRIPT.md`, then replace `build/narration.wav` and adjust
+  the sentence times in `build/timeline.json`.
+
+## Turning this into a reusable base
+
+For the next episode, keep `video.html`'s brand variables, the chrome (logo bar, caption pill, progress trail), the
+intro/close lockups and the card/row/panel styles. Replace the scene sections and `episode/script.json`. The
+progress trail's labels (Welcome, Learn, Discuss, Answers, Summit) can stay as the series structure.
