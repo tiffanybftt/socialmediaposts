@@ -6,314 +6,290 @@
    "id": "intro",
    "phase": 0,
    "start": 0.0,
-   "end": 17.888,
+   "end": 16.48,
    "sentences": [
     {
      "id": "i1",
      "caption": "Welcome, team.",
      "start": 0.7,
-     "end": 1.977
+     "end": 1.767
     },
     {
      "id": "i2",
      "caption": "AI is changing every industry, and fast. It can speed up our work and keep our workflows consistent.",
-     "start": 2.477,
-     "end": 9.42
+     "start": 2.267,
+     "end": 8.688
     },
     {
      "id": "i3",
-     "caption": "But you told us you have real questions about privacy, security and trust. That is exactly why we are here.",
-     "start": 9.92,
-     "end": 17.188
+     "caption": "But you told us you have real questions about privacy, security, and trust. And that's exactly why we're here.",
+     "start": 9.188,
+     "end": 15.78
     }
    ],
    "hold": [
-    17.188,
-    17.188
+    15.78,
+    15.78
    ]
   },
   {
    "id": "heard",
    "phase": 0,
-   "start": 17.888,
-   "end": 39.121,
+   "start": 16.48,
+   "end": 35.56,
    "sentences": [
     {
      "id": "h1",
      "caption": "We read every one of your responses, and four themes stood out.",
-     "start": 18.588,
-     "end": 22.117
+     "start": 17.18,
+     "end": 20.551
     },
     {
      "id": "h2",
      "caption": "Privacy and security. Is our information, and our clients' information, safe?",
-     "start": 22.617,
-     "end": 28.457
+     "start": 21.051,
+     "end": 26.107
     },
     {
      "id": "h3",
      "caption": "Accuracy. Can we trust what it tells us?",
-     "start": 28.957,
-     "end": 31.72
+     "start": 26.607,
+     "end": 28.889
     },
     {
      "id": "h4",
      "caption": "Authenticity. Will we lose our human touch?",
-     "start": 32.22,
-     "end": 35.239
+     "start": 29.389,
+     "end": 31.971
     },
     {
      "id": "h5",
      "caption": "And balance. How much should we share with it?",
-     "start": 35.739,
-     "end": 38.421
+     "start": 32.471,
+     "end": 34.86
     }
    ],
    "hold": [
-    38.421,
-    38.421
+    34.86,
+    34.86
    ]
   },
   {
    "id": "idea",
    "phase": 1,
-   "start": 39.121,
-   "end": 52.816,
+   "start": 35.56,
+   "end": 48.916,
    "sentences": [
     {
      "id": "k1",
-     "caption": "Here is one idea that makes everything simpler: treat Claude like a brand-new team member.",
-     "start": 39.821,
-     "end": 45.184
+     "caption": "Here's one idea that makes everything simpler: treat Claude like a brand-new team member.",
+     "start": 36.26,
+     "end": 41.487
     },
     {
      "id": "k2",
-     "caption": "You would not hand a new hire every password on day one. You would guide them, check their work, and stay in charge.",
-     "start": 45.684,
-     "end": 52.116
+     "caption": "You wouldn't hand a new hire every password on day one. You'd guide them, check their work, and stay in charge.",
+     "start": 41.987,
+     "end": 48.216
     }
    ],
    "hold": [
-    52.116,
-    52.116
+    48.216,
+    48.216
    ]
   },
   {
    "id": "protect",
    "phase": 1,
-   "start": 52.816,
-   "end": 86.948,
+   "start": 48.916,
+   "end": 81.671,
    "sentences": [
     {
      "id": "p1",
      "caption": "First, protect. Know where your information goes.",
-     "start": 53.516,
-     "end": 57.301
+     "start": 49.616,
+     "end": 52.475
     },
     {
      "id": "p2",
-     "caption": "On a Team or Enterprise plan, Anthropic does not train its models on our conversations by default. On a personal account, a Model Improvement setting controls this, so check it, and stick to our approved work account.",
-     "start": 57.801,
-     "end": 71.106
+     "caption": "On a Team or Enterprise plan, Anthropic doesn't train its models on our conversations by default. On a personal account, a Model Improvement setting controls this, so check it, and stick to our approved work account.",
+     "start": 52.975,
+     "end": 66.692
     },
     {
      "id": "p3",
      "caption": "Claude reaches the internet only through features that are turned on.",
-     "start": 71.606,
-     "end": 75.229
+     "start": 67.192,
+     "end": 70.883
     },
     {
      "id": "p4",
      "caption": "And connected apps, like Drive or Gmail, only show Claude what you can already see.",
-     "start": 75.729,
-     "end": 81.162
+     "start": 71.383,
+     "end": 76.396
     },
     {
      "id": "p5",
      "caption": "So connect only what we need, and disconnect anything we stop using.",
-     "start": 81.662,
-     "end": 86.248
+     "start": 76.896,
+     "end": 80.971
     }
    ],
    "hold": [
-    86.248,
-    86.248
+    80.971,
+    80.971
    ]
   },
   {
    "id": "light",
    "phase": 1,
-   "start": 86.948,
-   "end": 118.083,
+   "start": 81.671,
+   "end": 109.872,
    "sentences": [
     {
      "id": "t1",
      "caption": "Then use the traffic light.",
-     "start": 87.648,
-     "end": 89.529
+     "start": 82.371,
+     "end": 83.907
     },
     {
      "id": "t2",
      "caption": "Red means never share: passwords and logins, API keys, full card or bank numbers, and Social Security or government ID numbers.",
-     "start": 90.029,
-     "end": 100.06
+     "start": 84.407,
+     "end": 93.665
     },
     {
      "id": "t3",
      "caption": "Yellow means ask first, and only in approved tools: client details, anything under a confidentiality agreement, and employee, payroll or medical records.",
-     "start": 100.56,
-     "end": 111.938
+     "start": 94.165,
+     "end": 104.384
     },
     {
      "id": "t4",
      "caption": "Green means go ahead: your own drafts, public information, and ideas.",
-     "start": 112.438,
-     "end": 117.383
+     "start": 104.884,
+     "end": 109.172
     }
    ],
    "hold": [
-    117.383,
-    117.383
-   ]
-  },
-  {
-   "id": "discuss",
-   "phase": 2,
-   "start": 118.083,
-   "end": 134.588,
-   "sentences": [
-    {
-     "id": "d1",
-     "caption": "Let us pause and talk.",
-     "start": 118.783,
-     "end": 120.397
-    },
-    {
-     "id": "d2",
-     "caption": "What is one task Claude could take off your plate this week? And what is one thing you would never paste into it?",
-     "start": 120.897,
-     "end": 126.888
-    }
-   ],
-   "hold": [
-    126.888,
-    133.888
+    109.172,
+    109.172
    ]
   },
   {
    "id": "answers",
-   "phase": 3,
-   "start": 134.588,
-   "end": 203.426,
+   "phase": 2,
+   "start": 109.872,
+   "end": 175.003,
    "sentences": [
     {
      "id": "a0",
      "caption": "Now, your concerns, answered.",
-     "start": 135.288,
-     "end": 137.622
+     "start": 110.572,
+     "end": 112.364
     },
     {
      "id": "a1",
      "caption": "Accuracy. Claude can sound confident and still be wrong.",
-     "start": 138.122,
-     "end": 141.837
+     "start": 112.864,
+     "end": 116.128
     },
     {
      "id": "a1b",
-     "caption": "It makes what you already know better. It does not replace your judgment, so spot-check names, numbers and claims.",
-     "start": 142.337,
-     "end": 149.268
+     "caption": "It makes what you already know better. It doesn't replace your judgment, so spot-check names, numbers, and claims.",
+     "start": 116.628,
+     "end": 123.156
     },
     {
      "id": "a2",
      "caption": "Losing our human touch? Claude drafts, and you decide.",
-     "start": 149.768,
-     "end": 153.437
+     "start": 123.656,
+     "end": 126.963
     },
     {
      "id": "a2b",
      "caption": "Our voice and our relationships set us apart. The clearer the guidance and examples you give, the more it sounds like us.",
-     "start": 153.937,
-     "end": 161.019
+     "start": 127.463,
+     "end": 134.588
     },
     {
      "id": "a3",
      "caption": "How much to share? Share the situation, not the sensitive details.",
-     "start": 161.519,
-     "end": 166.081
+     "start": 135.088,
+     "end": 139.248
     },
     {
      "id": "a3b",
      "caption": "Swap real names for placeholders like Client A, and give plenty of context about the task and the tone.",
-     "start": 166.581,
-     "end": 173.164
+     "start": 139.748,
+     "end": 146.255
     },
     {
      "id": "a4",
      "caption": "Like any new hire, Claude does best with structure.",
-     "start": 173.664,
-     "end": 177.217
+     "start": 146.755,
+     "end": 149.592
     },
     {
      "id": "a4b",
      "caption": "Give it clear guidelines, spot-check its work, and fine-tune over time. Messy processes only get messy faster, so structure first, then test.",
-     "start": 177.717,
-     "end": 187.446
+     "start": 150.092,
+     "end": 159.436
     },
     {
      "id": "a5",
-     "caption": "And data breaches? No tool is risk free, so we protect in layers.",
-     "start": 187.946,
-     "end": 192.938
+     "caption": "And data breaches? No tool is risk-free, so we protect in layers.",
+     "start": 159.936,
+     "end": 164.139
     },
     {
      "id": "a5b",
      "caption": "Approved tools, strong unique passwords with two-step login, the traffic light rules, and speaking up right away if something sensitive is shared by mistake.",
-     "start": 193.438,
-     "end": 202.726
+     "start": 164.639,
+     "end": 174.303
     }
    ],
    "hold": [
-    202.726,
-    202.726
+    174.303,
+    174.303
    ]
   },
   {
    "id": "close",
-   "phase": 4,
-   "start": 203.426,
-   "end": 230.002,
+   "phase": 3,
+   "start": 175.003,
+   "end": 200.936,
    "sentences": [
     {
      "id": "c1",
-     "caption": "So here is the view from the summit.",
-     "start": 204.126,
-     "end": 206.135
+     "caption": "So here's the view from the summit.",
+     "start": 175.703,
+     "end": 177.601
     },
     {
      "id": "c2",
      "caption": "Protect what matters. Verify what it gives you. Stay human. And guide Claude like a new team member.",
-     "start": 206.635,
-     "end": 213.38
+     "start": 178.101,
+     "end": 184.267
     },
     {
      "id": "c3",
-     "caption": "Claude is here to support your judgment, not replace it. Thank you for asking honest questions, because that is what makes this team strong.",
-     "start": 213.88,
-     "end": 221.891
+     "caption": "Claude is here to support your judgment, not replace it. And thank you for asking honest questions, because that's what makes this team strong.",
+     "start": 184.767,
+     "end": 193.087
     },
     {
      "id": "c4",
-     "caption": "Keep the questions coming, and let us go build something great.",
-     "start": 222.391,
-     "end": 226.002
+     "caption": "Keep the questions coming, and let's go build something great.",
+     "start": 193.587,
+     "end": 196.936
     }
    ],
    "hold": [
-    226.002,
-    226.002
+    196.936,
+    196.936
    ]
   }
  ],
- "duration": 230.002
+ "duration": 200.936
 }

@@ -87,15 +87,6 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
 .chips{display:flex;flex-wrap:wrap;gap:12px 14px;flex:1}
 .pill{position:relative;font-weight:600;font-size:25px;padding:11px 22px;border-radius:999px;white-space:nowrap}
 
-/* discuss */
-.q{position:absolute;top:316px;width:820px;height:280px;padding:40px 48px}
-.q .num{font-weight:800;font-size:90px;color:var(--peach2);line-height:1}
-.q p{font-weight:700;font-size:38px;line-height:1.3;margin-top:14px;letter-spacing:-.01em}
-#ring{position:absolute;left:745px;top:640px;width:440px;height:150px;opacity:0}
-#ring svg{position:absolute;left:0;top:0;width:150px;height:150px;transform:rotate(-90deg)}
-#ring .num{position:absolute;left:0;top:0;width:150px;height:150px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:56px;color:var(--orange)}
-#ring .cap{position:absolute;left:176px;top:0;height:150px;display:flex;align-items:center;white-space:nowrap;font-weight:700;font-size:26px;line-height:1.25;color:var(--muted)}
-
 /* answers */
 .tab{position:absolute;left:120px;width:430px;height:84px;border-radius:24px;display:flex;align-items:center;padding:0 26px;gap:18px;font-weight:700;font-size:27px;color:#9A9288}
 .tab i{font-style:normal;flex:none;width:38px;height:38px;border-radius:50%;border:2.5px solid #D8D0C5;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800}
@@ -254,23 +245,6 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
       </div></div>
   </section>
 
-  <!-- ================= DISCUSS ================= -->
-  <section class="scene" data-scene="discuss" data-chrome="full">
-    <div class="a eyebrow" data-cue="d1" data-delay="-.2" data-anim="up">Pause &amp; discuss</div>
-    <div class="a h1" data-cue="d1" data-delay="-.1" data-anim="up">Let's talk it <em>through.</em></div>
-
-    <div class="a card q" data-cue="d2" data-frac="0" data-anim="pop" style="left:120px">
-      <div class="num">1</div><p>What's one task Claude could take off your plate this week?</p></div>
-    <div class="a card q" data-cue="d2" data-frac=".5" data-anim="pop" style="left:980px">
-      <div class="num">2</div><p>What's one thing you'd never paste into it?</p></div>
-
-    <div id="ring">
-      <svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="64" fill="none" stroke="var(--line)" stroke-width="12"/><circle id="ringarc" cx="75" cy="75" r="64" fill="none" stroke="var(--orange)" stroke-width="12" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0"/></svg>
-      <div class="num" id="ringnum">7</div>
-      <div class="cap">Take a moment<br>and talk it over</div>
-    </div>
-  </section>
-
   <!-- ================= YOUR CONCERNS ANSWERED ================= -->
   <section class="scene" data-scene="answers" data-chrome="full">
     <div class="a eyebrow" data-cue="scene" data-anim="up">Your concerns</div>
@@ -371,9 +345,8 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
   <div id="trail">
     <div class="line"></div><div class="fill" id="trailfill"></div>
     <div class="n" style="left:480px"></div><div class="lab" style="left:480px">Welcome</div>
-    <div class="n" style="left:720px"></div><div class="lab" style="left:720px">Learn</div>
-    <div class="n" style="left:960px"></div><div class="lab" style="left:960px">Discuss</div>
-    <div class="n" style="left:1200px"></div><div class="lab" style="left:1200px">Answers</div>
+    <div class="n" style="left:800px"></div><div class="lab" style="left:800px">Learn</div>
+    <div class="n" style="left:1120px"></div><div class="lab" style="left:1120px">Answers</div>
     <div class="n" style="left:1440px"></div><div class="lab" style="left:1440px">Summit</div>
   </div>
 </div>
@@ -424,12 +397,13 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
   }));
 
   // --- trail: the line reaches node k when phase k begins
-  const reach = [0,1,2,3,4].map(k=>{const sc=TL.scenes.find(s=>s.phase===k);return sc?sc.start:total});
   const nodes=[...document.querySelectorAll('#trail .n')], labs=[...document.querySelectorAll('#trail .lab')];
+  const NN=nodes.length, STEP=960/(NN-1);
+  const reach = nodes.map((_,k)=>{const sc=TL.scenes.find(s=>s.phase===k);return sc?sc.start:total});
 
   const $ = id=>document.getElementById(id);
   const brand=$('brand'), tag=$('tag'), trail=$('trail'), fill=$('trailfill'), cap=$('caption'), capt=$('captext');
-  const ring=$('ring'), arc=$('ringarc'), ringnum=$('ringnum'), ridge1=$('ridge1'), ridge2=$('ridge2');
+  const ridge1=$('ridge1'), ridge2=$('ridge2');
   const win=(t,sc)=>clamp((t-(sc.start-.25))/.5)*clamp(((sc.end+.25)-t)/.5);
 
   function applyAnim(a,t,sceneOp){
@@ -471,24 +445,15 @@ svg.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;strok
 
     // trail progress
     let pos=0;
-    for(let k=0;k<4;k++){ if(t>=reach[k] && t<reach[k+1]) pos = k + (t-reach[k])/(reach[k+1]-reach[k]); }
-    if(t>=reach[4]) pos=4;
-    fill.style.width = (pos*240)+'px';
+    for(let k=0;k<NN-1;k++){ if(t>=reach[k] && t<reach[k+1]) pos = k + (t-reach[k])/(reach[k+1]-reach[k]); }
+    if(t>=reach[NN-1]) pos=NN-1;
+    fill.style.width = (pos*STEP)+'px';
     nodes.forEach((n,k)=>{n.className='n'+(pos>=k+0.999?' done':(pos>=k?' on':'')); labs[k].className='lab'+(Math.floor(pos+0.001)===k?' on':'')});
 
     // captions
     const c = caps.find(c=>t>=c.s && t<c.e);
     if(c){ capt.textContent=c.text; cap.style.opacity=clamp((t-c.s)/0.12)*clamp((c.e-t)/0.1+0.2); }
     else cap.style.opacity=0;
-
-    // discussion countdown ring
-    const d = TL.scenes.find(s=>s.id==='discuss');
-    if(d && d.hold[1]>d.hold[0]){
-      const q=(t-d.hold[0])/(d.hold[1]-d.hold[0]);
-      ring.style.opacity = clamp((t-d.hold[0]+0.4)/0.4)*clamp((d.end-0.4-t)/0.4);
-      arc.style.strokeDashoffset = clamp(q);
-      ringnum.textContent = Math.max(0,Math.ceil((d.hold[1]-t)));
-    }
   };
 
   // --- stage scaling so the page can be previewed in any window

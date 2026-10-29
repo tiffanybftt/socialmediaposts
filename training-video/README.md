@@ -1,12 +1,14 @@
 # AI Summit Group: "Using Claude With Confidence"
 
-A 3:50 team training video on privacy, security and smart habits with Claude. Built from code, so every
+A 3:20 team training video on privacy, security and smart habits with Claude. Built from code, so every
 slide, caption and the voice-over come from the files in this folder and can be changed and re-rendered.
 
 | File | What it is |
 |---|---|
 | `ai-summit-claude-training.mp4` | The finished video (1080p, narration + soft music + burned-in captions) |
+| `RECORDING_SCRIPT.pdf` / `.md` | A script to record in your own voice: 11 short takes with delivery notes |
 | `SCRIPT.md` | The narration, scene by scene (generated from `episode/script.json`) |
+| `voice-samples/` | Sample clips of the same line in different AI voices |
 | `build/captions.srt` | Subtitles as a separate file, for platforms that take them |
 | `episode/script.json` | Source of truth for the words, scene order and pacing |
 | `video.html` | All visuals. Brand colors and fonts are the variables at the top (`:root`) |
@@ -40,13 +42,15 @@ answers are summarized as four themes without names.
 
 ## Rebuilding
 
-Needs `ffmpeg`, Node + Playwright, and Python with `piper-tts` and `numpy`. The voice is Piper's
-`en_US-lessac-high`.
+Needs `ffmpeg`, Node + Playwright, and Python with `kokoro-onnx` and `numpy`. The voice is set in
+`episode/script.json` (`"engine": "kokoro"`, `"voice": "af_heart"`, `"speed": 0.95`). Pick any voice name from
+`voice-samples/`. The older Piper engine still works with `"engine": "piper"`, `"voice": "en_US-lessac-high"`
+and `"length_scale": 1.12`.
 
 ```bash
 python tools/prep_logo.py                       # logo cut-outs (only if the logo changes)
-python tools/build_audio.py /path/to/voices      # narration + build/timeline.js + captions
-python tools/make_music.py 230                   # music bed, same length as the narration
+python tools/build_audio.py /path/to/voice-models  # narration + build/timeline.js + captions
+python tools/make_music.py 201                   # music bed, same length as the narration (see build/timeline.json)
 node tools/render.js 30 4                        # silent video, 4 parallel browsers (~5 min)
 tools/mix.sh                                     # mix audio onto the video
 ```
@@ -63,4 +67,5 @@ Notes:
 
 For the next episode, keep `video.html`'s brand variables, the chrome (logo bar, caption pill, progress trail), the
 intro/close lockups and the card/row/panel styles. Replace the scene sections and `episode/script.json`. The
-progress trail's labels (Welcome, Learn, Discuss, Answers, Summit) can stay as the series structure.
+progress trail's labels (Welcome, Learn, Answers, Summit) can stay as the series structure. The trail sizes itself
+to however many steps are in the page, so a "Discuss" step can be added back later by adding a scene and a label.

@@ -1,8 +1,9 @@
 {
   "title": "Using Claude With Confidence",
   "subtitle": "Privacy, security and smart habits for our team",
-  "voice": "en_US-lessac-high",
-  "length_scale": 1.12,
+  "engine": "kokoro",
+  "voice": "af_heart",
+  "speed": 0.95,
   "sentence_gap": 0.5,
   "scene_lead_in": 0.7,
   "scene_tail": 0.7,
@@ -57,17 +58,8 @@
       ]
     },
     {
-      "id": "discuss",
-      "phase": 2,
-      "hold_after": 7.0,
-      "sentences": [
-        {"id": "d1", "text": "Let's pause and talk."},
-        {"id": "d2", "text": "What's one task Claude could take off your plate this week? And what's one thing you'd never paste into it?"}
-      ]
-    },
-    {
       "id": "answers",
-      "phase": 3,
+      "phase": 2,
       "sentences": [
         {"id": "a0", "text": "Now, your concerns, answered."},
         {"id": "a1", "text": "Accuracy. Claude can sound confident and still be wrong."},
@@ -84,7 +76,7 @@
     },
     {
       "id": "close",
-      "phase": 4,
+      "phase": 3,
       "tail": 4.0,
       "sentences": [
         {"id": "c1", "text": "So here's the view from the summit."},
