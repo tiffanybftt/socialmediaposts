@@ -1,57 +1,59 @@
 # Using Claude With Confidence: narration script
-_Privacy, security and smart habits for our team. Runtime 3:20 · about 479 spoken words · generated from `episode/script.json`. To record this yourself, use `RECORDING_SCRIPT.pdf`._
+_669 spoken words, about 5:15 at a natural pace. Generated from `episode/script.json`. To record it yourself, use `RECORDING_SCRIPT.pdf`._
 
-## Intro  ·  0:00
+## Intro
 
-Welcome, team.  
-AI is changing every industry, and fast. It can speed up our work and keep our workflows consistent.  
-But you told us you have real questions about privacy, security, and trust. And that's exactly why we're here.  
+Hey Built For The Trades Team, it's Tiffany.  
+Welcome to this week's AI Training Video.  
+Thank you for answering the question, "What's one thing about using AI that makes you hesitant?"  
+You all had a lot of great responses.  
+Your worries are reasonable and you're not alone in having them.  
+I'd like to address your hesitations in this video to give you peace of mind while navigating Claude.  
+I'll be straight with you about what's solid and what's still a risk, and we'll take it one step at a time.  
 
-## What you told us  ·  0:16
+## What you told us
 
-We read every one of your responses, and four themes stood out.  
-Privacy and security. Is our information, and our clients' information, safe?  
-Accuracy. Can we trust what it tells us?  
-Authenticity. Will we lose our human touch?  
-And balance. How much should we share with it?  
+Four themes stood out.  
+One, privacy and security. We're worried about whether our information, and our clients' information, is safe.  
+Two, accuracy. We're worried about whether we can trust what it tells us, and whether there's a way to check.  
+Three, dependence. We're worried we'll lean on it too much and lose our own creativity and ingenuity.  
+And four, balance. We're worried about where AI belongs at Built For The Trades, and where it doesn't, so we keep the human touch and authenticity that matter so much to our brand.  
 
-## The big idea: a brand-new team member  ·  0:35
+## The big idea
 
 Here's one idea that makes everything simpler: treat Claude like a brand-new team member.  
-You wouldn't hand a new hire every password on day one. You'd guide them, check their work, and stay in charge.  
+You'd guide them, check their work, and stay in charge. And you'd train them.  
+I'll help train Claude on how we work, and in a future video we'll cover training your own Claude in your own voice and making your process more consistent. More to come.  
 
-## Training: Protect (where your information goes)  ·  0:48
+## Protect
 
-First, protect. Know where your information goes.  
-On a Team or Enterprise plan, Anthropic doesn't train its models on our conversations by default. On a personal account, a Model Improvement setting controls this, so check it, and stick to our approved work account.  
-Claude reaches the internet only through features that are turned on.  
-And connected apps, like Drive or Gmail, only show Claude what you can already see.  
-So connect only what we need, and disconnect anything we stop using.  
+First, protect. Our clients trust us with their finances, their people, their customers, and their access.  
+Only use our work Claude account. Never a personal account or a free tool. Our work plan doesn't use our conversations to train Anthropic's models by default.  
+Connectors only show Claude what you can already see. So connect only what the job needs, and ask before adding a new one.  
+And on recorded calls, tell clients we're recording, and decide before the call, not during, what stays off the record. HR issues, family, health, or anything under NDA? Turn Fathom off.  
 
-## Training: the traffic light rule  ·  1:21
+## The traffic light
 
 Then use the traffic light.  
-Red means never share: passwords and logins, API keys, full card or bank numbers, and Social Security or government ID numbers.  
-Yellow means ask first, and only in approved tools: client details, anything under a confidentiality agreement, and employee, payroll or medical records.  
-Green means go ahead: your own drafts, public information, and ideas.  
+Red means never put it in Claude: passwords, logins, API keys, bank or card numbers, and Social Security numbers. We keep using our own logins, and clients screen-share instead of signing in for us.  
+Yellow is the work we do every day: financials, employee details, customer names and phone numbers, call transcripts, and personal goals. It's allowed, with rules.  
+One client at a time. Only the fields the task needs. Swap names and numbers for codes when Claude doesn't need them, and put the real ones back at the end. And a person checks every name and number before it goes out.  
+Green means go ahead: our own frameworks and anything public.  
 
-## Your concerns, answered  ·  1:49
+## Your concerns, answered
 
 Now, your concerns, answered.  
-Accuracy. Claude can sound confident and still be wrong.  
-It makes what you already know better. It doesn't replace your judgment, so spot-check names, numbers, and claims.  
-Losing our human touch? Claude drafts, and you decide.  
-Our voice and our relationships set us apart. The clearer the guidance and examples you give, the more it sounds like us.  
-How much to share? Share the situation, not the sensitive details.  
-Swap real names for placeholders like Client A, and give plenty of context about the task and the tone.  
-Like any new hire, Claude does best with structure.  
-Give it clear guidelines, spot-check its work, and fine-tune over time. Messy processes only get messy faster, so structure first, then test.  
-And data breaches? No tool is risk-free, so we protect in layers.  
-Approved tools, strong unique passwords with two-step login, the traffic light rules, and speaking up right away if something sensitive is shared by mistake.  
+One, privacy and security. We just covered it. Work account only, and nothing from the red list.  
+Two, accuracy. Yes, there's a way to check.  
+Claude can sound confident and still be wrong, so verify what matters: names, numbers, dates, prices, and quotes. Ask where it got something, then check the source yourself. And nothing goes to a client until a person has read it.  
+Three, dependence. Our clients hire us for lived experience. Claude hasn't run a trades business; we have.  
+So start with your own thinking, and let Claude help with the blank page and the polish. If you couldn't explain it to a client, don't send it.  
+And four, balance.  
+Claude belongs in the prep and the polish: first drafts, reports, show notes, social posts, and spotting patterns in a spreadsheet. It doesn't belong in the room: the hard conversation with an owner, the personal goal setting, the coaching itself. That stays human.  
 
-## Uplifting close  ·  2:55
+## Close
 
 So here's the view from the summit.  
-Protect what matters. Verify what it gives you. Stay human. And guide Claude like a new team member.  
-Claude is here to support your judgment, not replace it. And thank you for asking honest questions, because that's what makes this team strong.  
-Keep the questions coming, and let's go build something great.  
+Protect what our clients trust us with. Check what Claude gives you. Keep the human touch. And teach Claude how we work, with more to come on that.  
+Thank you for being honest about your hesitations.  
+Keep the questions coming on Tuesday, and let's go build something great.  

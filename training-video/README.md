@@ -1,12 +1,12 @@
 # AI Summit Group: "Using Claude With Confidence"
 
-A 3:20 team training video on privacy, security and smart habits with Claude. Built from code, so every
+A roughly 5-minute team training video on privacy, security and smart habits with Claude. Built from code, so every
 slide, caption and the voice-over come from the files in this folder and can be changed and re-rendered.
 
 | File | What it is |
 |---|---|
 | `ai-summit-claude-training.mp4` | The finished video (1080p, narration + soft music + burned-in captions) |
-| `RECORDING_SCRIPT.pdf` / `.md` | A script to record in your own voice: 11 short takes with delivery notes |
+| `RECORDING_SCRIPT.pdf` / `.md` | A script to record in your own voice: 10 short takes with delivery notes |
 | `SCRIPT.md` | The narration, scene by scene (generated from `episode/script.json`) |
 | `voice-samples/` | Sample clips of the same line in different AI voices |
 | `build/captions.srt` | Subtitles as a separate file, for platforms that take them |
@@ -60,7 +60,7 @@ Notes:
 - Re-run `build_audio.py` and `render.js` together. The voice varies slightly run to run, so the timeline changes
   and the visuals must be re-rendered to match.
 - `node tools/snap.js out_dir 12 40 95` saves still frames at those seconds to check layout fast.
-- **Using a human voice.** Record the 11 takes in `RECORDING_SCRIPT.pdf` (Take_1 ... Take_7, with 6a to 6e). Then,
+- **Using a human voice.** Record the 10 takes in `RECORDING_SCRIPT.pdf` (Take_1 to Take_4, 5a, 5b, 6a to 6c, Take_7). Then,
   instead of `build_audio.py`:
 
   ```bash
